@@ -51,13 +51,19 @@ export default function Services() {
   }
 
   return (
-    <section ref={sectionRef} id="services" className="bg-black text-white min-h-screen flex flex-col">
-      <div 
-        className="h-32"
-        style={{
-          backgroundImage: 'repeating-linear-gradient(45deg, #C41E3A 0, #C41E3A 40px, #000 40px, #000 80px)'
-        }}
-      />
+    <section ref={sectionRef} id="services" className="bg-black text-white min-h-screen py-20">
+      <div className="container mx-auto px-6 w-full">
+        <h2 className={`text-5xl md:text-6xl font-bold text-center mb-12 ${isVisible ? 'fade-up' : 'opacity-0'}`}>Services</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          {services.map((service, idx) => (
+            <div key={service.title} className={`bg-gray-900 rounded-lg shadow-lg p-8 flex flex-col items-center text-center hover:shadow-xl transition-shadow ${isVisible ? 'fade-up fade-up-delay-1' : 'opacity-0'}`}>
+              <img src={service.image} alt={service.title} className="w-20 h-20 mb-4 object-contain" />
+              <h3 className="text-2xl font-bold mb-2">{service.title}</h3>
+              <p className="text-gray-300 text-lg">{service.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
       
       <div className="flex-1 flex flex-col justify-center container mx-auto px-6 py-12 relative">
         <h2 className={`text-8xl font-bold text-center mb-16 ${isVisible ? 'fade-up' : 'opacity-0'}`}>

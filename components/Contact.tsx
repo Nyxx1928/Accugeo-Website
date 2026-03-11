@@ -26,7 +26,7 @@ export default function Contact() {
   return (
     <section ref={sectionRef} id="contact" className="py-20 bg-black min-h-screen">
       <div className="container mx-auto px-6 w-full">
-        <h2 className={`text-8xl font-bold text-center mb-16 text-white ${isVisible ? 'fade-up' : 'opacity-0'}`}>
+        <h2 className={`text-5xl md:text-6xl font-bold text-center mb-16 text-white ${isVisible ? 'fade-up' : 'opacity-0'}`}>
           Contact Us
         </h2>
         
@@ -42,20 +42,25 @@ export default function Contact() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <p className={`text-gray-300 text-center text-lg ${isVisible ? 'fade-up fade-up-delay-3' : 'opacity-0'}`}>
+            <p className="text-gray-300 text-center text-lg">
               175 Katipunan St., Diliman, Quezon City, NCR, Metro Manila
             </p>
           </div>
           
           <div className="flex flex-col justify-start">
-            <div className={`mb-8 ${isVisible ? 'fade-up fade-up-delay-2' : 'opacity-0'}`}>
-              <h3 className="text-2xl font-bold mb-4 text-white">Email:</h3>
+            <div className="mb-8">
+              <h3 className="text-2xl font-bold mb-4 text-white flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-brand-red" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12H8m8 0a8 8 0 11-16 0 8 8 0 0116 0z" /></svg>
+                Email:
+              </h3>
               <p className="text-gray-300 text-lg">example@gmail.com</p>
               <p className="text-gray-300 text-lg">example2@gmail.com</p>
             </div>
-            
-            <div className={`mb-8 ${isVisible ? 'fade-up fade-up-delay-3' : 'opacity-0'}`}>
-              <h3 className="text-2xl font-bold mb-4 text-white">Phone Numbers:</h3>
+            <div className="mb-8">
+              <h3 className="text-2xl font-bold mb-4 text-white flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-brand-red" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A2 2 0 007.48 19h9.04a2 2 0 001.83-1.3L21 13M7 13V6a1 1 0 011-1h5a1 1 0 011 1v7" /></svg>
+                Phone Numbers:
+              </h3>
               <p className="text-gray-300 text-lg">1234567890</p>
             </div>
             

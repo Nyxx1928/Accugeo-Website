@@ -41,7 +41,9 @@ export default function Navbar() {
         backgroundRepeat: 'no-repeat'
       }}
     >
-      <div className="flex items-center justify-between py-4 px-4">
+      {/* Overlay for contrast */}
+      <div className="absolute inset-0 bg-black/60 pointer-events-none z-0" />
+      <div className="relative flex items-center justify-between py-4 px-4 z-10">
         <div className="flex items-center space-x-4 ml-16">
           <img src="/logo.png" alt="Accugeo Logo" className="h-36" />
           <div className="flex flex-col text-white">
@@ -49,7 +51,6 @@ export default function Navbar() {
             <span className="text-3xl">Materials and Testing Center</span>
           </div>
         </div>
-        
         <div className="hidden md:flex space-x-24 text-4xl font-bold -mt-8 mr-32">
           <button 
             onClick={() => scrollToSection('home')} 
@@ -57,7 +58,7 @@ export default function Navbar() {
           >
             Home
           </button>
-          <button 
+          <button
             onClick={() => scrollToSection('about')} 
             className="nav-button cursor-pointer"
           >
