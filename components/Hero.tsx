@@ -12,7 +12,7 @@ export default function Hero() {
       
       <div className="relative container mx-auto px-6 h-full flex items-center">
         <div className="max-w-2xl text-white">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 fade-up">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 fade-up">
             Tagline Here Lorem Ipsum
           </h1>
           <p className="text-lg leading-relaxed fade-up fade-up-delay-2">
