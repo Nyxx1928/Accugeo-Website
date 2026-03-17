@@ -1,5 +1,4 @@
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,13 +14,8 @@ h1.display,
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
 }
 
-/* Reduced motion — respect user preference and disable animations/transitions */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-    .fade-up,
-    .fade-up-delay-1,
-    .fade-up-delay-2,
-    .fade-up-delay-3,
-    .fade-up-delay-4,
     * {
         animation: none !important;
         transition: none !important;
@@ -76,38 +70,6 @@ button:hover,
 a:hover {
     filter: brightness(1.1);
     text-decoration: underline;
-}
-
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.fade-up {
-    opacity: 0;
-    animation: fadeUp 0.8s ease-out forwards;
-}
-
-.fade-up-delay-1 {
-    animation-delay: 0.1s;
-}
-
-.fade-up-delay-2 {
-    animation-delay: 0.2s;
-}
-
-.fade-up-delay-3 {
-    animation-delay: 0.3s;
-}
-
-.fade-up-delay-4 {
-    animation-delay: 0.4s;
 }
 
 @layer base {
@@ -187,7 +149,7 @@ a:hover {
     }
     body {
         background-color: var(--background);
-        color: var(--foreground);
+        color: white;
     }
     html {
         font-family:
