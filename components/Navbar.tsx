@@ -8,7 +8,6 @@ import {
   NavigationMenuLink,
   NavigationMenuIndicator,
   NavigationMenuViewport,
-  NavigationMenuTrigger,
 } from "./ui/navigation-menu";
 
 function scrollToSection(sectionId: string) {
