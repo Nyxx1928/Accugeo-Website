@@ -97,12 +97,9 @@ export default function Navbar() {
         <div className="flex items-center gap-4 ml-4 md:ml-16">
           <img src="/logo.png" alt="Accugeo Logo" className="h-20 md:h-28" />
           <div className="flex flex-col text-white">
-            <span className="text-xl md:text-2xl font-semibold leading-tight">
-              Accugeo Construction
-            </span>
-            <span className="text-lg md:text-xl leading-tight">
-              Materials and Testing Center
-            </span>
+            <div className="text-xl md:text-2xl font-semibold leading-tight">
+              Accugeo
+            </div>
           </div>
         </div>
 
@@ -209,10 +206,9 @@ export default function Navbar() {
             <div className="flex items-center gap-4">
               <img src="/logo.png" alt="Accugeo Logo" className="h-12" />
               <div className="flex flex-col text-white">
-                <span className="text-lg font-semibold">
-                  Accugeo Construction
-                </span>
-                <span className="text-sm">Materials and Testing Center</span>
+                <div className="text-lg font-semibold">
+                  Accugeo
+                </div>
               </div>
             </div>
             <button
