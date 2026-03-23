@@ -9,14 +9,28 @@ export default function Contact() {
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<null | string>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: replace with API integration
-    setStatus("Your message has been sent. We'll get back to you shortly.");
-    setName("");
-    setEmail("");
-    setPhone("");
-    setMessage("");
+    setStatus("Sending...");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, phone, message }),
+      });
+
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error || "Server error");
+
+      setStatus("Your message has been sent. We'll get back to you shortly.");
+      setName("");
+      setEmail("");
+      setPhone("");
+      setMessage("");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setStatus(msg || "Failed to send message.");
+    }
     setTimeout(() => setStatus(null), 5000);
   };
 
