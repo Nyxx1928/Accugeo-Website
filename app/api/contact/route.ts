@@ -3,12 +3,38 @@ import sgMail from "@sendgrid/mail";
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 const CONTACT_TO_EMAIL = process.env.CONTACT_TO_EMAIL;
+const RATE_LIMIT_WINDOW_MS = Number(process.env.RATE_LIMIT_WINDOW_MS) || 60 * 60 * 1000; // default 1 hour
+const RATE_LIMIT_MAX = Number(process.env.RATE_LIMIT_MAX) || 6; // default 6 requests per window
+
+type RateEntry = number[];
+// simple in-memory store: IP -> timestamps (ms)
+const rateStore: Map<string, RateEntry> = new Map();
+
+function getIp(req: Request) {
+  const forwarded = req.headers.get("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0].trim();
+  const realIp = req.headers.get("x-real-ip");
+  if (realIp) return realIp;
+  return "unknown";
+}
 
 if (SENDGRID_API_KEY) {
   sgMail.setApiKey(SENDGRID_API_KEY);
 }
 
 export async function POST(req: Request) {
+  // rate limiting by IP
+  const ip = getIp(req);
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW_MS;
+  const prev = rateStore.get(ip) || [];
+  const recent = prev.filter((ts) => ts > windowStart);
+  if (recent.length >= RATE_LIMIT_MAX) {
+    return NextResponse.json({ error: "Rate limit exceeded. Please try again later." }, { status: 429 });
+  }
+  recent.push(now);
+  rateStore.set(ip, recent);
+
   try {
     const data = await req.json();
     const { name, email, phone, message } = data || {};
