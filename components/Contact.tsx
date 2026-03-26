@@ -112,7 +112,7 @@ export default function Contact() {
                     ? "bg-yellow-900/30 text-yellow-200 p-3 rounded mb-4"
                     : "bg-red-900/30 text-red-200 p-3 rounded mb-4"
                 }
-                role="status"
+                role={status.kind === "error" ? "alert" : "status"}
               >
                 {status.message}
               </div>
