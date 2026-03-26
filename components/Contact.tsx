@@ -1,17 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState<null | string>(null);
+  type StatusKind = "success" | "error" | "pending";
+  const [status, setStatus] = useState<null | { kind: StatusKind; message: string }>(null);
+  const timeoutRef = useRef<number | null>(null);
+  const mountedRef = useRef(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("Sending...");
+    setStatus({ kind: "pending", message: "Sending..." });
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
@@ -20,19 +23,38 @@ export default function Contact() {
       });
 
       const json = await res.json();
-      if (!res.ok) throw new Error(json?.error || "Server error");
+      if (!res.ok) {
+        const errMsg = (json && (json.error || json.message)) || "Server error";
+        setStatus({ kind: "error", message: errMsg });
+        return;
+      }
 
-      setStatus("Your message has been sent. We'll get back to you shortly.");
+      const successMsg = (json && (json.message || json.success)) || "Your message has been sent. We'll get back to you shortly.";
+      setStatus({ kind: "success", message: successMsg });
       setName("");
       setEmail("");
       setPhone("");
       setMessage("");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      setStatus(msg || "Failed to send message.");
+      setStatus({ kind: "error", message: msg || "Failed to send message." });
     }
-    setTimeout(() => setStatus(null), 5000);
+    // clear previous timeout and set a new one to clear status
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = window.setTimeout(() => {
+      if (mountedRef.current) setStatus(null);
+    }, 5000);
   };
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   return (
     <section id="contact" className="py-20 bg-black min-h-screen">
@@ -82,7 +104,18 @@ export default function Contact() {
             <h3 className="text-2xl font-semibold text-white mb-4">Send a message</h3>
 
             {status && (
-              <div className="bg-green-900/30 text-green-200 p-3 rounded mb-4">{status}</div>
+              <div
+                className={
+                  status.kind === "success"
+                    ? "bg-green-900/30 text-green-200 p-3 rounded mb-4"
+                    : status.kind === "pending"
+                    ? "bg-yellow-900/30 text-yellow-200 p-3 rounded mb-4"
+                    : "bg-red-900/30 text-red-200 p-3 rounded mb-4"
+                }
+                role={status.kind === "error" ? "alert" : "status"}
+              >
+                {status.message}
+              </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
