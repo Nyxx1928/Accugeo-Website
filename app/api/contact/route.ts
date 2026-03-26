@@ -27,11 +27,22 @@ function pruneRateStore() {
     if (recent.length === 0) rateStore.delete(ip);
     else rateStore.set(ip, recent);
   });
-  // Evict oldest entries if store grows too large
+  // Evict least recently active entries if store grows too large
   if (rateStore.size > RATE_STORE_MAX_SIZE) {
-    const excess = rateStore.size - RATE_STORE_MAX_SIZE;
-    const keys = Array.from(rateStore.keys()).slice(0, excess);
-    for (const k of keys) rateStore.delete(k);
+    const entries = Array.from(rateStore.entries());
+    // Sort by last-seen timestamp, newest first
+    entries.sort((a, b) => {
+      const aTimestamps = a[1];
+      const bTimestamps = b[1];
+      const aLast = aTimestamps.length ? aTimestamps[aTimestamps.length - 1] : 0;
+      const bLast = bTimestamps.length ? bTimestamps[bTimestamps.length - 1] : 0;
+      return bLast - aLast;
+    });
+    // Keep only the most recently active RATE_STORE_MAX_SIZE entries
+    const toEvict = entries.slice(RATE_STORE_MAX_SIZE);
+    for (const [ip] of toEvict) {
+      rateStore.delete(ip);
+    }
   }
 }
 
