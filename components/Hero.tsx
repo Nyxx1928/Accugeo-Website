@@ -2,10 +2,9 @@
 
 import { Button } from "./ui/button";
 import TrustIndicators from "./TrustIndicators";
-import { useParallax } from "@/hooks/useParallax";
 
 export default function Hero() {
-  const { ref: parallaxRef, transform } = useParallax({ speed: 0.5 });
+  
 
   const handleContactClick = () => {
     const contactSection = document.getElementById("contact");
@@ -20,12 +19,9 @@ export default function Hero() {
   return (
     <section id="home" className="relative h-screen">
       <div
-        ref={parallaxRef as React.RefObject<HTMLDivElement>}
         className="absolute -top-20 left-0 right-0 bottom-0 bg-cover bg-center"
         style={{
           backgroundImage: "url(/Hero-bg.png)",
-          transform,
-          willChange: "transform",
         }}
       />
       <div className="absolute -top-20 left-0 right-0 bottom-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
