@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Calendar, Award, Briefcase } from 'lucide-react';
+import { Calendar, Award, Briefcase, Users } from 'lucide-react';
 
 export interface Stat {
+  id?: string;
   value: string;
   label: string;
   icon?: React.ReactNode;
@@ -12,48 +13,56 @@ export interface Stat {
 interface StatsGridProps {
   stats?: Stat[];
   className?: string;
-  visible?: boolean;
+  play?: boolean;
+  delayOffset?: number;
 }
 
 const defaultStats: Stat[] = [
   {
-    icon: <Calendar className="w-8 h-8" />,
-    value: '15+',
-    label: 'Years in Business',
+    id: 's1',
+    icon: <Calendar className="w-6 h-6" />,
+    value: '20+',
+    label: 'Years Serving',
   },
   {
-    icon: <Briefcase className="w-8 h-8" />,
+    id: 's2',
+    icon: <Briefcase className="w-6 h-6" />,
     value: '500+',
-    label: 'Projects Completed',
+    label: 'Projects',
   },
   {
-    icon: <Award className="w-8 h-8" />,
+    id: 's3',
+    icon: <Award className="w-6 h-6" />,
     value: '50+',
-    label: 'Certifications',
+    label: 'Awards',
+  },
+  {
+    id: 's4',
+    icon: <Users className="w-6 h-6" />,
+    value: '300+',
+    label: 'Clients',
   },
 ];
 
-export default function StatsGrid({ stats = defaultStats, className = '', visible = true }: StatsGridProps) {
+export default function StatsGrid({ stats = defaultStats, className = '', play = true, delayOffset = 0 }: StatsGridProps) {
   return (
-    <div className={`grid grid-cols-1 md:grid-cols-3 gap-8 ${className}`}>
+    <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 ${className}`}>
       {stats.map((stat, index) => (
-        <div 
-          key={index} 
-          className={`flex flex-col items-center text-center transition-opacity duration-600 ${
-            visible ? 'opacity-100 animate-fade-in-up' : 'opacity-0'
-          }`}
-          style={{ animationDelay: `${index * 100}ms` }}
+        <div
+          key={stat.id ?? index}
+          tabIndex={0}
+          role="group"
+          className={`stats-card bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 flex flex-col items-start gap-4 card-hover transition-all transform-gpu hover:-translate-y-1 hover:border-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C41E3A] ${play ? 'animate-fade-in-up opacity-0' : 'opacity-0'}`}
+          style={{ animationDelay: `${delayOffset + index * 100}ms` }}
         >
-          {stat.icon && (
-            <div className="mb-4 text-[#C41E3A]">
+          <div className="flex items-center gap-4">
+            <div className="bg-[#C41E3A]/10 rounded-full p-3 text-[#C41E3A] flex items-center justify-center">
               {stat.icon}
             </div>
-          )}
-          <div className="text-4xl md:text-5xl font-bold text-white mb-2">
-            {stat.value}
-          </div>
-          <div className="text-base md:text-lg text-gray-300">
-            {stat.label}
+            <div className="flex flex-col">
+              <div className="text-2xl md:text-3xl font-semibold text-white">{stat.value}</div>
+              <div className="text-sm md:text-base text-gray-400">{stat.label}</div>
+            </div>
           </div>
         </div>
       ))}
