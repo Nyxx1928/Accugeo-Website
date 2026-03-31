@@ -85,15 +85,80 @@ const services: Service[] = [
 
 export default function Services() {
   const [index, setIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [direction, setDirection] = useState<'left' | 'right' | null>(null);
+  const [fadeState, setFadeState] = useState<'visible' | 'fading-out' | 'fading-in'>('visible');
   const liveRef = useRef<HTMLParagraphElement | null>(null);
+  const carouselRef = useRef<HTMLElement | null>(null);
 
-  const prev = () => setIndex((i) => (i - 1 + services.length) % services.length);
-  const next = () => setIndex((i) => (i + 1) % services.length);
+  const navigateToIndex = (newIndex: number, navDirection: 'left' | 'right') => {
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
+    setDirection(navDirection);
+    setFadeState('fading-out');
+    
+    // Fade out for 200ms
+    setTimeout(() => {
+      setIndex(newIndex);
+      setFadeState('fading-in');
+      
+      // Fade in for 200ms
+      setTimeout(() => {
+        setFadeState('visible');
+        setIsTransitioning(false);
+        setDirection(null);
+      }, 200);
+    }, 200);
+  };
+
+  const prev = () => {
+    const newIndex = (index - 1 + services.length) % services.length;
+    navigateToIndex(newIndex, 'right'); // Slide right when going back
+  };
+  
+  const next = () => {
+    const newIndex = (index + 1) % services.length;
+    navigateToIndex(newIndex, 'left'); // Slide left when going forward
+  };
+
+  const goToIndex = (i: number) => {
+    if (i === index || isTransitioning) return;
+    const navDirection = i > index ? 'left' : 'right';
+    navigateToIndex(i, navDirection);
+  };
 
   const current = services[index];
 
+  // Update ARIA live region when service changes
+  React.useEffect(() => {
+    if (liveRef.current) {
+      liveRef.current.textContent = `Showing ${current.title}, service ${index + 1} of ${services.length}`;
+    }
+  }, [index, current.title]);
+
+  // Keyboard navigation handler
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (isTransitioning) return; // Disable keyboard nav during transition
+    
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      prev();
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      next();
+    }
+  };
+
   return (
-    <section id="services" className="bg-black text-white py-8 min-h-screen flex flex-col justify-center">
+    <section 
+      id="services" 
+      ref={carouselRef}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      aria-label="Services carousel"
+      className="bg-black text-white py-8 min-h-screen flex flex-col justify-center"
+    >
       {/* Header */}
       <div className="container mx-auto px-6 mb-6 text-center">
         <p className="text-xs uppercase tracking-wide text-gray-400">Services</p>
@@ -108,7 +173,8 @@ export default function Services() {
         <button
           aria-label="Previous service"
           onClick={prev}
-          className="absolute left-2 z-10 bg-black/60 hover:bg-black/80 p-2 rounded-full transition-colors"
+          disabled={isTransitioning}
+          className="absolute left-2 z-10 bg-black/60 hover:bg-black/80 p-2 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -118,7 +184,20 @@ export default function Services() {
         {/* Content */}
         <div className="container mx-auto px-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left: 3 image boxes */}
-          <div className="grid grid-cols-2 gap-3">
+          <div 
+            className="grid grid-cols-2 gap-3"
+            style={{
+              opacity: fadeState === 'fading-out' ? 0 : 1,
+              transform: fadeState === 'fading-in' 
+                ? `translateX(${direction === 'left' ? '-30px' : '30px'})` 
+                : 'translateX(0)',
+              transition: fadeState === 'fading-out' 
+                ? 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1)' 
+                : fadeState === 'fading-in'
+                ? 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1), transform 200ms cubic-bezier(0.4, 0, 0.2, 1)'
+                : 'none'
+            }}
+          >
             <div className="border-2 border-brand-red rounded-xl overflow-hidden aspect-[4/3]">
               <img src={current.images[0]} alt={current.title} className="w-full h-full object-cover" />
             </div>
@@ -131,7 +210,20 @@ export default function Services() {
           </div>
 
           {/* Right: title + sub-services */}
-          <div className="text-white">
+          <div 
+            className="text-white"
+            style={{
+              opacity: fadeState === 'fading-out' ? 0 : 1,
+              transform: fadeState === 'fading-in' 
+                ? `translateX(${direction === 'left' ? '-30px' : '30px'})` 
+                : 'translateX(0)',
+              transition: fadeState === 'fading-out' 
+                ? 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1)' 
+                : fadeState === 'fading-in'
+                ? 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1), transform 200ms cubic-bezier(0.4, 0, 0.2, 1)'
+                : 'none'
+            }}
+          >
             <h2 className="text-3xl md:text-4xl font-bold mb-5 text-white">{current.title}</h2>
             <ul className="space-y-2">
               {current.subServices.map((sub) => (
@@ -148,7 +240,8 @@ export default function Services() {
         <button
           aria-label="Next service"
           onClick={next}
-          className="absolute right-2 z-10 bg-black/60 hover:bg-black/80 p-2 rounded-full transition-colors"
+          disabled={isTransitioning}
+          className="absolute right-2 z-10 bg-black/60 hover:bg-black/80 p-2 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -156,19 +249,29 @@ export default function Services() {
         </button>
       </div>
 
-      {/* Indicator bars */}
-      <div className="flex gap-2 justify-center mt-6">
-        {services.map((s, i) => (
-          <button
-            key={s.title}
-            onClick={() => setIndex(i)}
-            aria-label={`Go to ${s.title}`}
-            aria-current={i === index ? "true" : undefined}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === index ? "bg-brand-red w-10" : "bg-gray-600 w-6 hover:bg-gray-400"
-            }`}
-          />
-        ))}
+      {/* Indicator dots with counter */}
+      <div className="flex flex-col items-center gap-3 mt-6">
+        <div className="flex gap-2 justify-center">
+          {services.map((s, i) => (
+            <button
+              key={s.title}
+              onClick={() => goToIndex(i)}
+              disabled={isTransitioning}
+              aria-label={`Go to ${s.title}`}
+              aria-current={i === index ? "true" : undefined}
+              className={`w-11 h-11 rounded-full transition-all duration-200 flex items-center justify-center disabled:cursor-not-allowed ${
+                i === index 
+                  ? "bg-brand-red scale-110" 
+                  : "bg-gray-600 hover:bg-gray-400 hover:scale-120"
+              }`}
+            >
+              <span className={`w-3 h-3 rounded-full ${i === index ? "bg-white" : "bg-gray-400"}`} />
+            </button>
+          ))}
+        </div>
+        <p className="text-sm text-gray-400">
+          {index + 1} of {services.length}
+        </p>
       </div>
 
       <p className="sr-only" aria-live="polite" ref={liveRef} />

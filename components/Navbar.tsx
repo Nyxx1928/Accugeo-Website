@@ -82,20 +82,10 @@ export default function Navbar() {
   }, [isOpen]);
 
   return (
-    <nav
-      className="fixed top-0 left-0 right-0 z-50 text-white shadow-lg"
-      style={{
-        backgroundImage: "url(/NavBar-BG.png)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backdropFilter: "blur(4px)",
-      }}
-    >
-      <div className="absolute inset-0 bg-black/60 pointer-events-none z-0" />
-      <div className="relative flex items-center justify-between py-2 px-4 z-10">
+    <nav className="fixed top-0 left-0 right-0 z-50 text-white bg-black/30 backdrop-blur-sm shadow-lg">
+      <div className="relative flex items-center justify-between py-1 px-4 z-10">
         <div className="flex items-center gap-4 ml-4 md:ml-16">
-          <img src="/logo.png" alt="Accugeo Logo" className="h-20 md:h-28" />
+          <img src="/logo.png" alt="Accugeo Logo" className="h-12 md:h-16" />
           <div className="flex flex-col text-white">
             <div className="text-xl md:text-2xl font-semibold leading-tight">
               Accugeo
@@ -154,7 +144,7 @@ export default function Navbar() {
             <NavigationMenuItem>
               <NavigationMenuLink
                 asChild
-                className="text-lg font-bold px-4 py-2 hover:bg-muted/30 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:outline-none cursor-pointer"
+                className="text-lg font-normal px-8 py-1 hover:bg-muted/30 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:outline-none cursor-pointer"
                 onClick={() => scrollToSection("home")}
               >
                 <span>Home</span>
@@ -163,7 +153,7 @@ export default function Navbar() {
             <NavigationMenuItem>
               <NavigationMenuLink
                 asChild
-                className="text-lg font-bold px-4 py-2 hover:bg-muted/30 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:outline-none cursor-pointer"
+                className="text-lg font-normal px-8 py-1 hover:bg-muted/30 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:outline-none cursor-pointer"
                 onClick={() => scrollToSection("about")}
               >
                 <span>About</span>
@@ -172,7 +162,7 @@ export default function Navbar() {
             <NavigationMenuItem>
               <NavigationMenuLink
                 asChild
-                className="text-lg font-bold px-4 py-2 hover:bg-muted/30 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:outline-none cursor-pointer"
+                className="text-lg font-normal px-8 py-1 hover:bg-muted/30 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:outline-none cursor-pointer"
                 onClick={() => scrollToSection("services")}
               >
                 <span>Services</span>
@@ -181,7 +171,7 @@ export default function Navbar() {
             <NavigationMenuItem>
               <NavigationMenuLink
                 asChild
-                className="text-lg font-bold px-4 py-2 hover:bg-muted/30 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:outline-none cursor-pointer"
+                className="text-lg font-normal px-8 py-1 hover:bg-muted/30 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:outline-none cursor-pointer"
                 onClick={() => scrollToSection("contact")}
               >
                 <span>Contact</span>
@@ -235,7 +225,7 @@ export default function Navbar() {
 
           <nav className="flex flex-col gap-4">
             <button
-              className="text-left text-2xl font-bold text-white p-2 focus-visible:ring-2 focus-visible:ring-brand-red"
+              className="text-left text-2xl font-normal text-white p-2 focus-visible:ring-2 focus-visible:ring-brand-red"
               onClick={() => {
                 setIsOpen(false);
                 setTimeout(() => scrollToSection("home"), 60);
@@ -244,7 +234,7 @@ export default function Navbar() {
               Home
             </button>
             <button
-              className="text-left text-2xl font-bold text-white p-2 focus-visible:ring-2 focus-visible:ring-brand-red"
+              className="text-left text-2xl font-normal text-white p-2 focus-visible:ring-2 focus-visible:ring-brand-red"
               onClick={() => {
                 setIsOpen(false);
                 setTimeout(() => scrollToSection("about"), 60);
@@ -253,7 +243,7 @@ export default function Navbar() {
               About
             </button>
             <button
-              className="text-left text-2xl font-bold text-white p-2 focus-visible:ring-2 focus-visible:ring-brand-red"
+              className="text-left text-2xl font-normal text-white p-2 focus-visible:ring-2 focus-visible:ring-brand-red"
               onClick={() => {
                 setIsOpen(false);
                 setTimeout(() => scrollToSection("services"), 60);
@@ -262,7 +252,7 @@ export default function Navbar() {
               Services
             </button>
             <button
-              className="text-left text-2xl font-bold text-white p-2 focus-visible:ring-2 focus-visible:ring-brand-red"
+              className="text-left text-2xl font-normal text-white p-2 focus-visible:ring-2 focus-visible:ring-brand-red"
               onClick={() => {
                 setIsOpen(false);
                 setTimeout(() => scrollToSection("contact"), 60);
