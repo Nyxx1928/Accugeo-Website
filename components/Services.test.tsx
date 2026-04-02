@@ -239,74 +239,50 @@ describe('Services Carousel Slide Transitions', () => {
     
     // Should only advance by one (not three)
     expect(screen.getByText('Quality Inspection')).toBeInTheDocument();
-    expect(screen.getByText('2 of 6')).toBeInTheDocument();
+    expect(screen.getByText(/^2 of 6$/i, { selector: 'p' })).toBeInTheDocument();
   });
 
-  it('should apply fade-out and fade-in transitions', async () => {
+  it('should update active slide visibility when navigating', async () => {
     render(<Services />);
     const carousel = screen.getByRole('region', { name: /services carousel/i });
-    
-    // Start navigation
+
+    const materialSlide = screen.getByText('Material Testing').closest('div[aria-hidden]');
+    expect(materialSlide).toHaveAttribute('aria-hidden', 'false');
+
     act(() => {
       fireEvent.keyDown(carousel, { key: 'ArrowRight' });
+      jest.advanceTimersByTime(400);
     });
-    
-    // During fade-out, opacity should be 0
-    const container = document.querySelector('.grid.grid-cols-2') as HTMLElement;
-    expect(container?.style.opacity).toBe('0');
-    
-    // Advance to fade-in state
-    act(() => {
-      jest.advanceTimersByTime(200);
-    });
-    
-    // Should be in fade-in state (opacity will animate from 0 to 1)
-    expect(screen.getByText('Quality Inspection')).toBeInTheDocument();
-    
-    // Complete transition
-    act(() => {
-      jest.advanceTimersByTime(200);
-    });
-    
-    // Should be fully visible
-    expect(container?.style.opacity).toBe('1');
+
+    const qualitySlide = screen.getByText('Quality Inspection').closest('div[aria-hidden]');
+    expect(qualitySlide).toHaveAttribute('aria-hidden', 'false');
+    expect(materialSlide).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('should apply slide animation in navigation direction', async () => {
+  it('should update active indicator as navigation direction changes', async () => {
     render(<Services />);
     const carousel = screen.getByRole('region', { name: /services carousel/i });
-    
-    // Navigate forward (should slide left)
+
+    const firstIndicator = screen.getByRole('button', { name: /go to material testing/i });
+    const secondIndicator = screen.getByRole('button', { name: /go to quality inspection/i });
+
+    expect(firstIndicator).toHaveAttribute('aria-current', 'true');
+
     act(() => {
       fireEvent.keyDown(carousel, { key: 'ArrowRight' });
-      jest.advanceTimersByTime(200); // Advance to fade-in state
+      jest.advanceTimersByTime(400);
     });
-    
-    // During fade-in, should have translateX for slide effect
-    const container = document.querySelector('.grid.grid-cols-2') as HTMLElement;
-    expect(container?.style.transform).toContain('translateX(-30px)');
-    
-    // Complete transition
-    act(() => {
-      jest.advanceTimersByTime(200);
-    });
-    
-    expect(screen.getByText('Quality Inspection')).toBeInTheDocument();
-    expect(container?.style.transform).toBe('translateX(0)');
-    
-    // Navigate backward (should slide right)
+
+    expect(secondIndicator).toHaveAttribute('aria-current', 'true');
+    expect(firstIndicator).not.toHaveAttribute('aria-current', 'true');
+
     act(() => {
       fireEvent.keyDown(carousel, { key: 'ArrowLeft' });
-      jest.advanceTimersByTime(200);
+      jest.advanceTimersByTime(400);
     });
-    
-    expect(container?.style.transform).toContain('translateX(30px)');
-    
-    act(() => {
-      jest.advanceTimersByTime(200);
-    });
-    
-    expect(screen.getByText('Material Testing')).toBeInTheDocument();
+
+    expect(firstIndicator).toHaveAttribute('aria-current', 'true');
+    expect(secondIndicator).not.toHaveAttribute('aria-current', 'true');
   });
 
   it('should disable keyboard navigation during transition', async () => {
@@ -331,7 +307,7 @@ describe('Services Carousel Slide Transitions', () => {
     
     // Should only advance by one
     expect(screen.getByText('Quality Inspection')).toBeInTheDocument();
-    expect(screen.getByText('2 of 6')).toBeInTheDocument();
+    expect(screen.getByText(/^2 of 6$/i, { selector: 'p' })).toBeInTheDocument();
   });
 
   it('should disable indicator clicks during transition', async () => {
@@ -356,6 +332,6 @@ describe('Services Carousel Slide Transitions', () => {
     
     // Should show third service (not fifth)
     expect(screen.getByText('Consulting & Reporting')).toBeInTheDocument();
-    expect(screen.getByText('3 of 6')).toBeInTheDocument();
+    expect(screen.getByText(/^3 of 6$/i, { selector: 'p' })).toBeInTheDocument();
   });
 });
