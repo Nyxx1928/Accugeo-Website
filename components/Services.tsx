@@ -230,7 +230,6 @@ export default function Services() {
       x: 0,
       transition: {
         duration: prefersReducedMotion ? 0 : 0.38,
-        ease: [0.22, 1, 0.36, 1],
       },
     }),
     [prefersReducedMotion],
@@ -242,7 +241,6 @@ export default function Services() {
       x: prefersReducedMotion ? 0 : direction === "left" ? 10 : -10,
       transition: {
         duration: prefersReducedMotion ? 0 : 0.24,
-        ease: [0.4, 0, 0.2, 1],
       },
     }),
     [prefersReducedMotion, direction],
