@@ -151,7 +151,6 @@ export default function Services() {
   };
 
   const current = services[index];
-  const isFirstService = index === 0;
 
   return (
     <section id="services" className="bg-black text-white py-8 min-h-screen flex flex-col justify-center">
