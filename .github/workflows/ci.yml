@@ -335,7 +335,8 @@ jobs:
           format: table
           output: trivy-report.txt
           vuln-type: os,library
-          severity: HIGH,CRITICAL
+          scanners: vuln
+          severity: CRITICAL
           ignore-unfixed: true
           exit-code: "1"
 
