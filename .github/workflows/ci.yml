@@ -2,31 +2,445 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
+  workflow_dispatch:
+
+env:
+  IMAGE_TAG: accugeo-website:ci-${{ github.sha }}
 
 jobs:
-  build:
+  phase-1-lint-validate:
+    name: "Phase 1: Lint and Validate"
     runs-on: ubuntu-latest
+    outputs:
+      duration: ${{ steps.phase_meta.outputs.duration }}
+    timeout-minutes: 15
     steps:
+      - name: Start phase timer
+        id: phase_timer
+        run: echo "start=$(date +%s)" >> "$GITHUB_OUTPUT"
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
 
       - name: Install dependencies
         run: npm ci
 
       - name: Typecheck
-        run: npx tsc --noEmit
+        run: npm run typecheck
 
       - name: Lint
         run: npm run lint
 
-      - name: Build
-        run: npm run build
+      - name: End phase timer
+        id: phase_meta
+        if: always()
+        run: |
+          end=$(date +%s)
+          duration=$((end - ${{ steps.phase_timer.outputs.start }}))
+          echo "duration=${duration}s" >> "$GITHUB_OUTPUT"
+
+  phase-2-unit-testing:
+    name: "Phase 2: Unit Testing"
+    runs-on: ubuntu-latest
+    needs: phase-1-lint-validate
+    outputs:
+      duration: ${{ steps.phase_meta.outputs.duration }}
+    timeout-minutes: 20
+    steps:
+      - name: Start phase timer
+        id: phase_timer
+        run: echo "start=$(date +%s)" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests (Jest)
+        run: npm run test:unit
+
+      - name: Upload unit test coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jest-coverage
+          path: coverage
+          if-no-files-found: warn
+
+      - name: End phase timer
+        id: phase_meta
+        if: always()
+        run: |
+          end=$(date +%s)
+          duration=$((end - ${{ steps.phase_timer.outputs.start }}))
+          echo "duration=${duration}s" >> "$GITHUB_OUTPUT"
+
+  phase-3-integration-testing:
+    name: "Phase 3: Integration Testing"
+    runs-on: ubuntu-latest
+    needs: phase-2-unit-testing
+    outputs:
+      duration: ${{ steps.phase_meta.outputs.duration }}
+    timeout-minutes: 20
+    steps:
+      - name: Start phase timer
+        id: phase_timer
+        run: echo "start=$(date +%s)" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run integration tests
+        run: |
+          : > integration-test-results.json
+          npm run test:integration
+
+      - name: Upload integration test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: integration-test-results.json
+          if-no-files-found: warn
+
+      - name: End phase timer
+        id: phase_meta
+        if: always()
+        run: |
+          end=$(date +%s)
+          duration=$((end - ${{ steps.phase_timer.outputs.start }}))
+          echo "duration=${duration}s" >> "$GITHUB_OUTPUT"
+
+  phase-4-e2e-playwright:
+    name: "Phase 4: E2E - Playwright"
+    runs-on: ubuntu-latest
+    needs: phase-3-integration-testing
+    outputs:
+      duration: ${{ steps.phase_meta.outputs.duration }}
+    timeout-minutes: 30
+    steps:
+      - name: Start phase timer
+        id: phase_timer
+        run: echo "start=$(date +%s)" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Playwright E2E tests
+        run: |
+          npx playwright install --with-deps
+          npm run test:e2e
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: End phase timer
+        id: phase_meta
+        if: always()
+        run: |
+          end=$(date +%s)
+          duration=$((end - ${{ steps.phase_timer.outputs.start }}))
+          echo "duration=${duration}s" >> "$GITHUB_OUTPUT"
+
+  phase-5-test-build-docker:
+    name: "Phase 5: Test and Build Docker"
+    runs-on: ubuntu-latest
+    needs: phase-4-e2e-playwright
+    outputs:
+      duration: ${{ steps.phase_meta.outputs.duration }}
+    timeout-minutes: 25
+    steps:
+      - name: Start phase timer
+        id: phase_timer
+        run: echo "start=$(date +%s)" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Dockerfile exists
+        run: |
+          if [ ! -f Dockerfile ]; then
+            echo "::error::Dockerfile not found at repository root. Phase 5 requires a Dockerfile."
+            exit 1
+          fi
+
+      - name: Build Docker image
+        run: docker build -t "$IMAGE_TAG" .
+
+      - name: Run container and health check
+        run: |
+          set -e
+          docker run -d --name accugeo-ci -p 3000:3000 "$IMAGE_TAG"
+          healthy=0
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3000 >/dev/null; then
+              healthy=1
+              break
+            fi
+            sleep 1
+          done
+          docker logs accugeo-ci || true
+          if [ "$healthy" -ne 1 ]; then
+            echo "::error::Container health check failed after 30 seconds."
+            exit 1
+          fi
+
+      - name: Export Docker image
+        run: docker save "$IMAGE_TAG" -o docker-image.tar
+
+      - name: Upload Docker image artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: docker-image.tar
+          if-no-files-found: error
+
+      - name: Cleanup container
+        if: always()
+        run: docker rm -f accugeo-ci || true
+
+      - name: End phase timer
+        id: phase_meta
+        if: always()
+        run: |
+          end=$(date +%s)
+          duration=$((end - ${{ steps.phase_timer.outputs.start }}))
+          echo "duration=${duration}s" >> "$GITHUB_OUTPUT"
+
+  phase-6-security-scan:
+    name: "Phase 6: Security Scan"
+    runs-on: ubuntu-latest
+    needs: phase-5-test-build-docker
+    permissions:
+      contents: read
+      security-events: write
+      id-token: write
+    outputs:
+      duration: ${{ steps.phase_meta.outputs.duration }}
+    timeout-minutes: 25
+    steps:
+      - name: Start phase timer
+        id: phase_timer
+        run: echo "start=$(date +%s)" >> "$GITHUB_OUTPUT"
+
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+          path: .
+
+      - name: Load Docker image
+        run: docker load -i docker-image.tar
+
+      - name: Generate SBOM with Syft (CycloneDX JSON)
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ env.IMAGE_TAG }}
+          format: cyclonedx-json
+          output-file: sbom-cyclonedx.json
+
+      - name: Upload SBOM artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cyclonedx
+          path: sbom-cyclonedx.json
+          if-no-files-found: error
+
+      - name: Scan vulnerabilities with Trivy
+        uses: aquasecurity/trivy-action@v0.35.0
+        with:
+          image-ref: ${{ env.IMAGE_TAG }}
+          format: table
+          output: trivy-report.txt
+          vuln-type: os,library
+          scanners: vuln
+          severity: CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
+
+      - name: Upload Trivy report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: trivy-report.txt
+          if-no-files-found: warn
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.8.1
+
+      - name: Cosign sign and verify docker artifact
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: |
+          if [ -z "$COSIGN_PRIVATE_KEY" ]; then
+            echo "::warning::COSIGN_PRIVATE_KEY is not configured. Cosign signing/verification step was skipped."
+            exit 0
+          fi
+          printf '%s' "$COSIGN_PRIVATE_KEY" > cosign.key
+          cosign public-key --key cosign.key > cosign.pub
+          cosign sign-blob --yes --key cosign.key --output-signature docker-image.tar.sig docker-image.tar
+          cosign verify-blob --key cosign.pub --signature docker-image.tar.sig docker-image.tar
+
+      - name: Upload Cosign signature artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cosign-signature
+          path: |
+            docker-image.tar.sig
+            cosign.pub
+          if-no-files-found: warn
+
+      - name: End phase timer
+        id: phase_meta
+        if: always()
+        run: |
+          end=$(date +%s)
+          duration=$((end - ${{ steps.phase_timer.outputs.start }}))
+          echo "duration=${duration}s" >> "$GITHUB_OUTPUT"
+
+  phase-7-ci-summary:
+    name: "Phase 7: CI Summary"
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - phase-1-lint-validate
+      - phase-2-unit-testing
+      - phase-3-integration-testing
+      - phase-4-e2e-playwright
+      - phase-5-test-build-docker
+      - phase-6-security-scan
+    steps:
+      - name: Build CI summary
+        run: |
+          phase1="${{ needs.phase-1-lint-validate.result }}"
+          phase2="${{ needs.phase-2-unit-testing.result }}"
+          phase3="${{ needs.phase-3-integration-testing.result }}"
+          phase4="${{ needs.phase-4-e2e-playwright.result }}"
+          phase5="${{ needs.phase-5-test-build-docker.result }}"
+          phase6="${{ needs.phase-6-security-scan.result }}"
+
+          d1="${{ needs.phase-1-lint-validate.outputs.duration }}"
+          d2="${{ needs.phase-2-unit-testing.outputs.duration }}"
+          d3="${{ needs.phase-3-integration-testing.outputs.duration }}"
+          d4="${{ needs.phase-4-e2e-playwright.outputs.duration }}"
+          d5="${{ needs.phase-5-test-build-docker.outputs.duration }}"
+          d6="${{ needs.phase-6-security-scan.outputs.duration }}"
+
+          failed=""
+          for item in "Phase 1:$phase1" "Phase 2:$phase2" "Phase 3:$phase3" "Phase 4:$phase4" "Phase 5:$phase5" "Phase 6:$phase6"; do
+            name="${item%%:*}"
+            status="${item##*:}"
+            if [ "$status" = "failure" ] || [ "$status" = "cancelled" ]; then
+              failed="$failed $name"
+            fi
+          done
+
+          if [ -z "$failed" ]; then
+            overall="PASSED"
+          else
+            overall="FAILED"
+          fi
+
+          {
+            echo "## CI Pipeline Summary"
+            echo
+            echo "**Overall Status:** $overall"
+            echo
+            echo "| Phase | Status | Duration |"
+            echo "|---|---|---|"
+            echo "| Phase 1: Lint and Validate | $phase1 | ${d1:-N/A} |"
+            echo "| Phase 2: Unit Testing | $phase2 | ${d2:-N/A} |"
+            echo "| Phase 3: Integration Testing | $phase3 | ${d3:-N/A} |"
+            echo "| Phase 4: E2E - Playwright | $phase4 | ${d4:-N/A} |"
+            echo "| Phase 5: Test and Build Docker | $phase5 | ${d5:-N/A} |"
+            echo "| Phase 6: Security Scan | $phase6 | ${d6:-N/A} |"
+            echo
+            if [ "$overall" = "FAILED" ]; then
+              echo "Failed phases:$failed"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,5 +1,7 @@
 # Accugeo Website
 
+[![CI](https://github.com/Insentient57/Accugeo-Website/actions/workflows/ci.yml/badge.svg)](https://github.com/Insentient57/Accugeo-Website/actions/workflows/ci.yml)
+
 A modern website for Accugeo Construction Materials and Testing Center built with Next.js and Tailwind CSS.
 
 ## Features

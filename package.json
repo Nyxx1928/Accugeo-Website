@@ -6,8 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "typecheck": "tsc --noEmit",
     "lint": "next lint",
-    "test": "jest",
+    "test": "npm run test:unit",
+    "test:unit": "jest --ci --coverage --runInBand --testPathIgnorePatterns=\".*\\.integration\\.(test|spec)\\.[jt]sx?$\"",
+    "test:integration": "jest --ci --runInBand --passWithNoTests --testMatch=\"**/?(*.)+(integration.test|integration.spec).[jt]s?(x)\" --json --outputFile=integration-test-results.json",
+    "test:e2e": "playwright test --reporter=line,html --pass-with-no-tests",
     "test:watch": "jest --watch"
   },
   "dependencies": {
@@ -27,6 +31,7 @@
   },
   "dependenciesMeta": {},
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
