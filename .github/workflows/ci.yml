@@ -351,19 +351,18 @@ jobs:
         uses: sigstore/cosign-installer@v3.8.1
 
       - name: Cosign sign and verify docker artifact
-        if: ${{ secrets.COSIGN_PRIVATE_KEY != '' }}
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         run: |
+          if [ -z "$COSIGN_PRIVATE_KEY" ]; then
+            echo "::warning::COSIGN_PRIVATE_KEY is not configured. Cosign signing/verification step was skipped."
+            exit 0
+          fi
           printf '%s' "$COSIGN_PRIVATE_KEY" > cosign.key
           cosign public-key --key cosign.key > cosign.pub
           cosign sign-blob --yes --key cosign.key --output-signature docker-image.tar.sig docker-image.tar
           cosign verify-blob --key cosign.pub --signature docker-image.tar.sig docker-image.tar
-
-      - name: Cosign skipped notice
-        if: ${{ secrets.COSIGN_PRIVATE_KEY == '' }}
-        run: echo "::warning::COSIGN_PRIVATE_KEY is not configured. Cosign signing/verification step was skipped."
 
       - name: Upload Cosign signature artifact
         if: always()
