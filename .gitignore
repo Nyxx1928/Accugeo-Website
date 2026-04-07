@@ -5,6 +5,9 @@
 
 # testing
 /coverage
+integration-test-results.json
+playwright-report/
+test-results/
 
 # next.js
 /.next/
