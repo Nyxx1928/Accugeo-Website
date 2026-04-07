@@ -85,7 +85,7 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 text-white bg-black/30 backdrop-blur-sm shadow-lg">
       <div className="relative flex items-center justify-between py-1 px-4 z-10">
         <div className="flex items-center gap-4 ml-4 md:ml-16">
-          <img src="/logo.png" alt="Accugeo Logo" className="h-12 md:h-16" />
+          <img src="/LOGO.png" alt="Accugeo Logo" className="h-12 md:h-16" />
           <div className="flex flex-col text-white">
             <div className="text-xl md:text-2xl font-semibold leading-tight">
               Accugeo
@@ -194,7 +194,7 @@ export default function Navbar() {
         >
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <img src="/logo.png" alt="Accugeo Logo" className="h-12" />
+              <img src="/LOGO.png" alt="Accugeo Logo" className="h-12" />
               <div className="flex flex-col text-white">
                 <div className="text-lg font-semibold">
                   Accugeo
