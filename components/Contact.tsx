@@ -69,7 +69,7 @@ export default function Contact() {
               <div className="h-56 rounded-lg overflow-hidden shadow-sm">
                 <img src="/Location Image.png" alt="Location Map" className="w-full h-full object-cover" />
               </div>
-              <p className="text-gray-200 mt-3 text-sm md:text-base">175 Katipunan St., Diliman, Quezon City, NCR, Metro Manila</p>
+              <p className="text-gray-200 mt-3 text-sm md:text-base">175 Kamias Road Extn., Sikatuna Village, Quezon City</p>
             </div>
 
             <div className="grid grid-cols-1 gap-4">
@@ -80,8 +80,7 @@ export default function Contact() {
                 <div>
                   <p className="text-sm text-gray-400">Email</p>
                   <div className="flex flex-col">
-                    <a href="mailto:example@gmail.com" className="text-white font-medium hover:text-gray-300">example@gmail.com</a>
-                    <a href="mailto:example2@gmail.com" className="text-white font-medium hover:text-gray-300">example2@gmail.com</a>
+                    <a href="mailto:accugeo@gmail.com" className="text-white font-medium hover:text-gray-300">accugeo@gmail.com</a>
                   </div>
                 </div>
               </div>
@@ -92,8 +91,8 @@ export default function Contact() {
                 </svg>
                 <div>
                   <p className="text-sm text-gray-400">Phone</p>
-                  <a href="tel:+1234567890" className="text-white font-medium hover:text-gray-300">+1 (234) 567-890</a>
-                  <p className="text-white mt-1"><a href="tel:+6312345678" className="hover:text-gray-300">+63 1234 5678</a></p>
+                  <a href="tel:+639178971006" className="text-white font-medium hover:text-gray-300">09178971006</a>
+                  <p className="text-white mt-1"><a href="tel:+63287259882" className="hover:text-gray-300">(02)8725-9882</a></p>
                 </div>
               </div>
             </div>
@@ -171,7 +170,7 @@ export default function Contact() {
 
             <div className="mt-6 flex items-center justify-between gap-4">
               <button type="submit" className="bg-brand-red text-white font-semibold rounded-md px-6 py-3 hover:opacity-95">Send Message</button>
-              <p className="text-sm text-gray-400">Prefer email? <a href="mailto:example@gmail.com" className="underline text-white">Send one directly</a></p>
+              <p className="text-sm text-gray-400">Prefer email? <a href="mailto:accugeo@gmail.com" className="underline text-white">Send one directly</a></p>
             </div>
           </form>
         </div>
