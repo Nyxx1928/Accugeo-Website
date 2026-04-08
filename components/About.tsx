@@ -18,7 +18,7 @@ export default function About() {
       className="bg-black min-h-screen py-16 md:py-24 relative overflow-hidden"
       ref={sectionRef as React.RefObject<HTMLElement>}
     >
-      <div aria-hidden="true" className="absolute inset-0 z-0 pointer-events-none" style={{ opacity: 0.32 }}>
+      <div aria-hidden="true" className="absolute inset-0 z-0 pointer-events-none" style={{ opacity: 0.96 }}>
         <Squares speed={0.5} squareSize={40} direction="diagonal" borderColor="#1a1a1a" hoverFillColor="#1a1a1a" />
       </div>
       <style>{`#about canvas { z-index: 0 !important; pointer-events: none !important; }`}</style>
