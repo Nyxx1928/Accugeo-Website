@@ -69,10 +69,13 @@ export default function About() {
 
             <div className={`mb-6 ${sectionVisible ? '' : 'opacity-0'}`}>
               <p className="text-lg md:text-xl text-gray-200 mb-4 leading-relaxed animate-fade-in-up opacity-0" style={{ animationDelay: '200ms' }}>
-                At AccuGeo Materials, we combine technical precision with a commitment to quality. From SPC flooring to premium wall systems, our solutions are engineered for durability and designed for beauty.
+                Accugeo Construction Materials and Testing Center (ACMTC) is a dynamic and growing laboratory dedicated to providing high-quality construction material testing services to stakeholders across the Philippines.
               </p>
               <p className="text-base md:text-lg text-gray-400 leading-relaxed mt-4 animate-fade-in-up opacity-0" style={{ animationDelay: '300ms' }}>
-                We deliver full-service support — design consultation, product selection, and professional installation — so every project is completed on time and to spec.
+                Guided by our mission to deliver precise and reliable testing nationwide, and our vision to establish the production of certified reference materials in accordance with ASTM and AASHTO standards, we uphold the highest levels of accuracy, competence, methodical processes, and integrity. Through continuous improvement of testing techniques and strict adherence to international standards, Accugeo ensures every result is credible and dependable.
+              </p>
+              <p className="text-base md:text-lg text-gray-400 leading-relaxed mt-4 animate-fade-in-up opacity-0" style={{ animationDelay: '360ms' }}>
+                At Accugeo, we combine technical expertise with unwavering professionalism to build lasting trust with our clients — empowering the construction industry with quality data they can confidently build upon.
               </p>
               <div className="flex items-center gap-6 mt-6">
                 <div className="flex items-center gap-2 text-gray-300 animate-fade-in-up opacity-0" style={{ animationDelay: '320ms' }}>
