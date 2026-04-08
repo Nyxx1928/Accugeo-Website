@@ -58,44 +58,18 @@ const services: Service[] = [
     ],
   },
   {
-    title: "Consulting & Reporting",
+    title: "Geotechnical Investigation",
     summary: "Systematic subsurface exploration and geotechnical investigation to characterize soil and rock conditions, supporting safe and cost-effective design of foundations, slopes, and underground structures.",
     subServices: [
       "Onshore and Offshore",
       "Test Pitting",
+      "Borehole Drilling",
+      "Standard Penetration Test",
     ],
     images: [
       { src: "/service3.png", alt: "Consultant presenting technical findings to stakeholders" },
       { src: "/service1.png", alt: "Detailed engineering report with compliance and recommendations" },
       { src: "/service2.png", alt: "Project planning session focused on material standards" },
-    ],
-  },
-  {
-    title: "Structural Assessment",
-    summary: "Accugeo provides comprehensive consultancy and inspection services tailored to the needs of construction, infrastructure, and industrial projects.",
-    subServices: [
-      "Visual Inspection",
-      "Load Testing",
-      "Condition Survey",
-    ],
-    images: [
-      { src: "/service2.png", alt: "Engineer performing visual structural condition inspection" },
-      { src: "/service1.png", alt: "Crack mapping worksheet used in a structural assessment" },
-      { src: "/service3.png", alt: "Assessment team discussing reinforcement corrosion findings" },
-    ],
-  },
-  {
-    title: "Geotechnical Investigation",
-    summary: "Advanced geotechnical investigation methods to assess subsurface conditions and support safe foundation design.",
-    subServices: [
-      "Borehole Drilling",
-      "Standard Penetration Test",
-      "Soil Classification",
-    ],
-    images: [
-      { src: "/service1.png", alt: "Borehole operation capturing subsurface soil profiles" },
-      { src: "/service3.png", alt: "Geotechnical specialist reviewing field penetration test readings" },
-      { src: "/service2.png", alt: "Soil sample trays prepared for classification and moisture analysis" },
     ],
   },
   {
@@ -116,8 +90,45 @@ const services: Service[] = [
   },
 ];
 
-function buildAccordionDescription(serviceTitle: string, subService: string) {
-  return `${subService} is delivered as part of ${serviceTitle} with standards-based workflows, documented findings, and practical recommendations for your project team.`;
+const subServiceDescriptions: Record<string, string> = {
+  // Material Testing
+  "QUALITY TEST OF SOILS/ SOIL AGGREGATES": "Evaluates the physical and engineering properties of soils and soil aggregates including gradation, plasticity, compaction, and bearing capacity to ensure suitability for construction use.",
+  "QUALITY TEST OF COARSE AGGREGATES": "Assesses coarse aggregate samples for size distribution, abrasion resistance, soundness, and specific gravity to verify compliance with project and DPWH specifications.",
+  "QUALITY TEST OF FINE AGGREGATES": "Tests fine aggregates for fineness modulus, organic impurities, clay content, and specific gravity to confirm suitability for concrete and asphalt mix designs.",
+  "QUALITY TEST OF COMPOSITE AGGREGATES": "Examines blended aggregate combinations for gradation balance and material consistency, ensuring the mix meets structural and pavement design requirements.",
+  "QUALITY TEST OF HARDENED CONCRETE": "Determines the compressive strength and durability of hardened concrete specimens to verify that placed concrete meets the specified design strength.",
+  "QUALITY TEST OF CONCRETE CORE": "Extracts and tests drilled cores from existing concrete structures to assess in-place strength, density, and integrity for quality assurance or forensic evaluation.",
+  "QUALITY TEST OF CONCRETE HOLLOW BLOCKS": "Measures the compressive strength, dimensions, and water absorption of concrete hollow blocks to confirm compliance with ASTM and local masonry standards.",
+  "QUALITY TEST OF ASPHALT CORE": "Analyzes extracted asphalt pavement cores for thickness, density, air voids, and bitumen content to evaluate pavement quality and construction compliance.",
+  "QUALITY TEST OF CEMENT": "Tests cement samples for fineness, setting time, soundness, and compressive strength to ensure the material meets ASTM C150 or equivalent standards before use.",
+  "QUALITY TEST OF ASPHALT CEMENT": "Evaluates asphalt cement binder for penetration, ductility, softening point, and viscosity to confirm performance characteristics for pavement applications.",
+  "QUALITY TEST OF EMULSIFIED ASPHALTS": "Tests emulsified asphalt products for viscosity, residue content, and stability to verify suitability for tack coats, prime coats, and surface treatments.",
+  "QUALITY TEST OF CONCRETE JOINT SEALER": "Assesses joint sealant materials for flow resistance, bond strength, and flexibility to ensure long-term performance in concrete pavement joints.",
+  "QUALITY TEST OF BITUMINOUS COLD MIXTURES": "Evaluates cold-mix asphalt for stability, flow, and air void content to confirm adequacy for patching and low-volume road applications.",
+  "QUALITY TEST OF REINFORCING STEEL BARS": "Tests rebar samples for tensile strength, yield strength, elongation, and bend properties to verify compliance with ASTM A615 or PNS standards.",
+  "QUALITY TEST OF GALVANIZED STEEL PRODUCTS": "Checks galvanized steel for coating thickness, adhesion, and uniformity to ensure adequate corrosion protection for structural and utility applications.",
+  "QUALITY TEST OF MINERAL FILLER": "Determines the gradation and plasticity of mineral filler materials used in asphalt mixes to confirm they meet mix design and specification requirements.",
+  "QUALITY TEST OF FLY ASH": "Tests fly ash for fineness, loss on ignition, and pozzolanic activity index to verify its suitability as a supplementary cementitious material in concrete.",
+  "QUALITY TEST OF HYDRATED LIME": "Evaluates hydrated lime for purity, fineness, and reactivity to confirm performance as a stabilizing agent or anti-stripping additive in pavement construction.",
+  "QUALITY TEST OF CURING COMPOUND": "Assesses liquid membrane-forming curing compounds for water retention efficiency and coverage rate to ensure proper concrete curing and strength development.",
+  // Quality Inspection
+  "Field Density Test": "Measures the in-place dry density and moisture content of compacted soil or base materials using nuclear gauge or sand cone methods to verify that compaction meets specified requirements.",
+  "Dynamic Cone Penetrometer Test": "Uses a DCP device to rapidly assess the in-situ strength and bearing capacity of subgrade and base layers, providing continuous resistance profiles for pavement evaluation.",
+  // Geotechnical Investigation
+  "Onshore and Offshore": "Conducts comprehensive subsurface investigations on land and marine environments, including soil sampling, in-situ testing, and laboratory analysis to support foundation and infrastructure design.",
+  "Test Pitting": "Excavates shallow test pits to directly observe and sample soil stratigraphy, identify subsurface anomalies, and collect disturbed or undisturbed specimens for laboratory testing.",
+  "Borehole Drilling": "Advances boreholes to required depths using rotary or percussion drilling methods, retrieving soil and rock samples for classification, testing, and geotechnical profile development.",
+  "Standard Penetration Test": "Performs SPT at regular depth intervals within boreholes to measure soil resistance, providing N-values used for bearing capacity estimation, liquefaction assessment, and pile design.",
+  // Non-Destructive Testing
+  "Rebound Hammer Test": "Uses a Schmidt rebound hammer to estimate the surface hardness and approximate compressive strength of concrete elements quickly and without causing any damage to the structure.",
+  "Dye Penetrant Test": "Applies a liquid penetrant to metal surfaces to detect surface-breaking cracks, porosity, and discontinuities in welds and structural components through capillary action.",
+  "Magnetic Test": "Employs magnetic particle inspection to locate surface and near-surface flaws in ferromagnetic materials, commonly used for weld inspection and structural steel assessment.",
+  "Hardness Test": "Measures the resistance of a material to permanent deformation using Brinell, Rockwell, or Vickers methods to verify material grade and heat treatment compliance.",
+  "Rebar Scanning": "Uses ground-penetrating radar or cover meter technology to locate embedded reinforcement bars, determine cover depth, and assess rebar layout without breaking the concrete surface.",
+};
+
+function buildAccordionDescription(_serviceTitle: string, subService: string): string {
+  return subServiceDescriptions[subService] ?? `${subService} is performed following applicable standards with documented findings and practical recommendations for your project team.`;
 }
 
 export default function Services() {
@@ -128,7 +139,7 @@ export default function Services() {
     }, {});
   });
 
-  const firstThreeServices = useMemo(() => services.slice(0, 3), []);
+  const firstThreeServices = useMemo(() => services, []);
 
   const toggleAccordionItem = (serviceIndex: number, itemIndex: number) => {
     setOpenItemByService((previous) => ({
@@ -151,7 +162,7 @@ export default function Services() {
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#e56c81]">Our Services</p>
           <h2 className="mt-3 text-4xl font-semibold tracking-tight text-white md:text-6xl">Reliable engineering services for better build outcomes</h2>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-[#c7a3ae] md:text-base">
-            We provide laboratory testing, on-site inspection, and technical reporting with the precision and responsiveness modern projects require.
+            We provide laboratory testing, in-situ testing, geotechnical investigation, and technical reporting with the precision and responsiveness modern projects require.
           </p>
         </div>
 

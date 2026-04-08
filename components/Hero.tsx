@@ -28,11 +28,10 @@ export default function Hero() {
       <div className="relative container mx-auto px-6 h-full flex items-center">
         <div className="max-w-3xl text-white">
           <h1 className="hero-heading text-4xl md:text-5xl font-bold mb-6 opacity-0-initial animate-fade-in-up">
-            Tagline Here Lorem Ipsum
+            Precision in Every Test, Trust in Every Result
           </h1>
           <p className="text-lg leading-relaxed text-white mb-8 opacity-0-initial animate-fade-in-up animation-delay-200">
-            <span className="block">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis consequat nulla eget elit.</span>
-            <span className="block mt-2">Duis consequat nulla eget elit. Duis consequat nulla eget elit. Duis consequat nulla eget elit.</span>
+            Accugeo Construction Materials Testing Center is committed to delivering high-quality, accurate, and reliable material testing services through strict adherence to ASTM and AASHTO standards.
           </p>
           
           {/* CTA Buttons */}

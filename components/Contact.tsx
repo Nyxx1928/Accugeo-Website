@@ -111,6 +111,11 @@ export default function Contact() {
                     <a href="tel:+63287259882" className="transition-colors hover:text-white">(02)8725-9882</a>
                   </p>
                   <p className="mt-4 text-white/65">175 Kamias Road Extn., Sikatuna Village, Quezon City</p>
+                  <div className="mt-3 space-y-1.5 text-white/65">
+                    <p>Lot 1 Block 2 Cabalantian, Bacolor, Pampanga</p>
+                    <p>17 Lower Kalaklan, Olongapo City</p>
+                    <p>Suite 115, West Gate Suites, Building 286, Sampson Road, Central Business District, Subic Bay Freeport Zone</p>
+                  </div>
                 </div>
               </div>
 
