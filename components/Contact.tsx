@@ -56,123 +56,140 @@ export default function Contact() {
     };
   }, []);
 
-  return (
-    <section id="contact" className="py-20 bg-black min-h-screen">
-      <div className="container mx-auto px-6 w-full">
-        <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-12 text-white">Get in touch</h2>
+  const fieldBaseClass =
+    "w-full bg-transparent border-0 border-b border-white/35 px-0 pb-2 text-white placeholder:text-white/40 focus:border-white/85 focus:outline-none";
 
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-start">
-          {/* Left column: location & quick contacts */}
-          <div className="space-y-6">
-            <div className="bg-gray-900/60 p-6 rounded-xl border border-gray-800">
-              <h3 className="text-2xl font-semibold text-white mb-3">Location</h3>
-              <div className="h-56 rounded-lg overflow-hidden shadow-sm">
-                <img src="/Location Image.png" alt="Location Map" className="w-full h-full object-cover" />
+  return (
+    <section id="contact" className="relative overflow-hidden bg-[#0a0b0d] py-16 text-white md:py-24">
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_20%,rgba(255,255,255,0.08),transparent_34%),radial-gradient(circle_at_86%_82%,rgba(211,31,47,0.24),transparent_45%),linear-gradient(180deg,#101114_0%,#090a0c_100%)]" />
+        <div className="absolute -left-24 top-20 h-72 w-72 rounded-full bg-white/10 blur-[120px]" />
+        <div className="absolute -right-24 bottom-10 h-80 w-80 rounded-full bg-[#d31f2f]/20 blur-[130px]" />
+      </div>
+
+      <div className="relative mx-auto w-full max-w-[1120px] px-4 sm:px-6">
+        <div className="relative min-h-[680px] overflow-hidden border border-white/15 bg-[#08090c]">
+          <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-full bg-[radial-gradient(circle_at_20%_12%,rgba(255,255,255,0.14),transparent_32%),linear-gradient(135deg,#1b1f28_0%,#10131a_42%,#050608_100%)] lg:w-[58%]" />
+          <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-full opacity-40 [background-image:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px] lg:w-[58%]" />
+          <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 w-full bg-[radial-gradient(circle_at_30%_18%,rgba(211,31,47,0.74),rgba(94,13,22,0.9)_42%,rgba(10,10,13,0.99)_100%)] lg:w-[52%]" />
+          <div aria-hidden className="pointer-events-none absolute inset-0 bg-black/40" />
+
+          <div className="relative z-10 flex h-full min-h-[680px] flex-col px-6 pb-8 pt-6 md:px-10 md:pb-10 md:pt-8 lg:px-12 lg:pt-10">
+            <div className="flex items-center justify-between gap-3 text-white">
+              <p className="text-lg font-medium tracking-tight">Accugeo</p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  className="rounded-full border border-white/50 px-4 py-1.5 text-[11px] uppercase tracking-[0.16em] text-white/90 transition hover:border-white hover:bg-white/10 hover:no-underline"
+                >
+                  Make an enquiry
+                </button>
+                <button
+                  type="button"
+                  aria-label="Open menu"
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/45 text-white/90 transition hover:border-white hover:bg-white/10 hover:no-underline"
+                >
+                  <span aria-hidden className="text-[10px] leading-none tracking-tight">|||</span>
+                </button>
               </div>
-              <p className="text-gray-200 mt-3 text-sm md:text-base">175 Kamias Road Extn., Sikatuna Village, Quezon City</p>
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
-              <div className="bg-gray-900/60 p-4 rounded-lg border border-gray-800 flex items-start gap-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-brand-red flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12H8m8 0a8 8 0 11-16 0 8 8 0 0116 0z" />
-                </svg>
-                <div>
-                  <p className="text-sm text-gray-400">Email</p>
-                  <div className="flex flex-col">
-                    <a href="mailto:accugeo@gmail.com" className="text-white font-medium hover:text-gray-300">accugeo@gmail.com</a>
-                  </div>
+            <div className="mt-10 grid flex-1 gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+              <div className="flex h-full flex-col justify-between">
+                <h2 className="max-w-xl text-[clamp(2rem,5.7vw,5rem)] font-light leading-[0.92] tracking-tight text-white">
+                  Let&apos;s build <span className="font-semibold text-[#d31f2f]">greatest</span> projects together.
+                </h2>
+
+                <div className="mt-12 max-w-xs border-t border-white/20 pt-6 text-sm leading-relaxed text-white/75 lg:mt-0">
+                  <p>
+                    <a href="mailto:accugeo@gmail.com" className="transition-colors hover:text-white">accugeo@gmail.com</a>
+                  </p>
+                  <p className="mt-2">
+                    <a href="tel:+639178971006" className="transition-colors hover:text-white">09178971006</a>
+                  </p>
+                  <p>
+                    <a href="tel:+63287259882" className="transition-colors hover:text-white">(02)8725-9882</a>
+                  </p>
+                  <p className="mt-4 text-white/65">175 Kamias Road Extn., Sikatuna Village, Quezon City</p>
                 </div>
               </div>
 
-              <div className="bg-gray-900/60 p-4 rounded-lg border border-gray-800 flex items-start gap-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-brand-red flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A2 2 0 007.48 19h9.04a2 2 0 001.83-1.3L21 13M7 13V6a1 1 0 011-1h5a1 1 0 011 1v7" />
-                </svg>
-                <div>
-                  <p className="text-sm text-gray-400">Phone</p>
-                  <a href="tel:+639178971006" className="text-white font-medium hover:text-gray-300">09178971006</a>
-                  <p className="text-white mt-1"><a href="tel:+63287259882" className="hover:text-gray-300">(02)8725-9882</a></p>
-                </div>
+              <div className="pb-2 lg:pb-4">
+                <p className="max-w-md text-[clamp(1.3rem,2.4vw,2.1rem)] font-light leading-[1.22] text-white/92">
+                  We&apos;re here to bring your concept to life, manage your ongoing project, or expand your existing development team.
+                </p>
+
+                {status && (
+                  <div
+                    className={
+                      status.kind === "success"
+                        ? "mt-5 rounded-md border border-green-200/40 bg-green-900/25 px-3 py-2 text-sm text-green-100"
+                        : status.kind === "pending"
+                        ? "mt-5 rounded-md border border-yellow-100/40 bg-yellow-900/25 px-3 py-2 text-sm text-yellow-100"
+                        : "mt-5 rounded-md border border-red-200/40 bg-red-900/30 px-3 py-2 text-sm text-red-100"
+                    }
+                    role={status.kind === "error" ? "alert" : "status"}
+                  >
+                    {status.message}
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="mt-8 space-y-8">
+                  <div className="grid gap-7 sm:grid-cols-2 sm:gap-6">
+                    <label className="flex min-h-[44px] flex-col">
+                      <span className="mb-2 text-[11px] uppercase tracking-[0.16em] text-white/65">Name</span>
+                      <input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        placeholder="Your name"
+                        className={fieldBaseClass}
+                      />
+                    </label>
+
+                    <label className="flex min-h-[44px] flex-col">
+                      <span className="mb-2 text-[11px] uppercase tracking-[0.16em] text-white/65">Email</span>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        placeholder="you@company.com"
+                        className={fieldBaseClass}
+                      />
+                    </label>
+                  </div>
+
+                  <label className="flex min-h-[44px] flex-col">
+                    <span className="mb-2 text-[11px] uppercase tracking-[0.16em] text-white/65">Project Information</span>
+                    <textarea
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      required
+                      rows={4}
+                      placeholder="Tell us about your project"
+                      className={`${fieldBaseClass} resize-none`}
+                    />
+                  </label>
+
+                  <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+                    <button
+                      type="submit"
+                      className="rounded-full border border-white/55 px-5 py-2 text-sm font-medium text-white transition hover:border-white hover:bg-white/10 hover:no-underline"
+                    >
+                      Send Inquiry
+                    </button>
+                    <p className="text-sm text-white/70">
+                      Prefer email?{" "}
+                      <a href="mailto:accugeo@gmail.com" className="text-white underline-offset-2 transition-colors hover:text-white/85">
+                        Send one directly
+                      </a>
+                    </p>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
-
-          {/* Right column: contact form */}
-          <form onSubmit={handleSubmit} className="bg-gray-900/60 p-6 rounded-xl border border-gray-800 shadow-sm">
-            <h3 className="text-2xl font-semibold text-white mb-4">Send a message</h3>
-
-            {status && (
-              <div
-                className={
-                  status.kind === "success"
-                    ? "bg-green-900/30 text-green-200 p-3 rounded mb-4"
-                    : status.kind === "pending"
-                    ? "bg-yellow-900/30 text-yellow-200 p-3 rounded mb-4"
-                    : "bg-red-900/30 text-red-200 p-3 rounded mb-4"
-                }
-                role={status.kind === "error" ? "alert" : "status"}
-              >
-                {status.message}
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <label className="flex flex-col">
-                <span className="text-sm text-gray-300 mb-1">Name</span>
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  placeholder="Your name"
-                  className="bg-gray-800 text-white placeholder-gray-400 border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-red"
-                />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-sm text-gray-300 mb-1">Email</span>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="you@company.com"
-                  className="bg-gray-800 text-white placeholder-gray-400 border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-red"
-                />
-              </label>
-            </div>
-
-            <div className="mt-4">
-              <label className="flex flex-col">
-                <span className="text-sm text-gray-300 mb-1">Phone (optional)</span>
-                <input
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+63 9xx xxx xxxx"
-                  className="bg-gray-800 text-white placeholder-gray-400 border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-red"
-                />
-              </label>
-            </div>
-
-            <div className="mt-4">
-              <label className="flex flex-col">
-                <span className="text-sm text-gray-300 mb-1">Message</span>
-                <textarea
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  required
-                  rows={5}
-                  placeholder="How can we help you?"
-                  className="bg-gray-800 text-white placeholder-gray-400 border border-gray-700 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-red"
-                />
-              </label>
-            </div>
-
-            <div className="mt-6 flex items-center justify-between gap-4">
-              <button type="submit" className="bg-brand-red text-white font-semibold rounded-md px-6 py-3 hover:opacity-95">Send Message</button>
-              <p className="text-sm text-gray-400">Prefer email? <a href="mailto:accugeo@gmail.com" className="underline text-white">Send one directly</a></p>
-            </div>
-          </form>
         </div>
       </div>
     </section>

@@ -7,12 +7,12 @@ describe("Contact integration", () => {
     render(<Contact />);
 
     expect(
-      screen.getByRole("heading", { name: /get in touch/i }),
+      screen.getByRole("heading", { name: /let's build greatest projects together\./i }),
     ).toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: /name/i })).toBeInTheDocument();
-    expect(screen.getByRole("textbox", { name: /message/i })).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: /project information/i })).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /send message/i }),
+      screen.getByRole("button", { name: /send inquiry/i }),
     ).toBeInTheDocument();
   });
 });

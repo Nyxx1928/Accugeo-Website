@@ -17,7 +17,7 @@ export default function RootLayout({
       <head>
         <link href="https://fonts.cdnfonts.com/css/sansation" rel="stylesheet" />
       </head>
-      <body style={{ fontFamily: 'Sansation, sans-serif' }}>
+      <body>
         <main className="pt-20">{children}</main>
       </body>
     </html>
