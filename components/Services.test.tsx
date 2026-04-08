@@ -10,7 +10,7 @@ describe('Services Section (Editorial Layout)', () => {
     expect(screen.getByRole('heading', { name: /reliable engineering services for better build outcomes/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Material Testing' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Quality Inspection' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Consulting & Reporting' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Geotechnical Investigation' })).toBeInTheDocument();
 
     // The redesigned section intentionally highlights the first three offerings.
     expect(screen.queryByRole('heading', { name: 'Structural Assessment' })).not.toBeInTheDocument();
@@ -38,7 +38,7 @@ describe('Services Section (Editorial Layout)', () => {
 
     expect(secondTrigger).toHaveAttribute('aria-expanded', 'true');
     expect(
-      screen.getByText(/quality test of coarse aggregates is delivered as part of material testing/i),
+      screen.getByText(/assesses coarse aggregate samples for size distribution/i),
     ).toBeInTheDocument();
   });
 
