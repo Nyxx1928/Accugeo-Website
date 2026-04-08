@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useRef, useState, useCallback } from "react";
+import React, { useMemo, useState } from "react";
 
 type ServiceImage = { src: string; alt: string };
 
@@ -116,216 +116,152 @@ const services: Service[] = [
   },
 ];
 
-const TRANSITION_DURATION = 400;
-const MAX_VISIBLE_SUBSERVICES = 6;
-
-type NavigationDirection = "next" | "prev" | "jump";
+function buildAccordionDescription(serviceTitle: string, subService: string) {
+  return `${subService} is delivered as part of ${serviceTitle} with standards-based workflows, documented findings, and practical recommendations for your project team.`;
+}
 
 export default function Services() {
-  const [index, setIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [navigationDirection, setNavigationDirection] = useState<NavigationDirection>("next");
-  const [expandedServices, setExpandedServices] = useState<Record<number, boolean>>({});
-  const isTransitioningRef = useRef(false);
-  const pendingDirectionRef = useRef<NavigationDirection>("next");
-  const liveRef = useRef<HTMLParagraphElement | null>(null);
+  const [openItemByService, setOpenItemByService] = useState<Record<number, number>>(() => {
+    return services.reduce<Record<number, number>>((acc, _service, index) => {
+      acc[index] = 0;
+      return acc;
+    }, {});
+  });
 
-  const navigate = useCallback((nextIndex: number, direction: NavigationDirection = "jump") => {
-    if (isTransitioningRef.current) return;
-    isTransitioningRef.current = true;
-    pendingDirectionRef.current = direction;
-    setIsTransitioning(true);
-    setTimeout(() => {
-      isTransitioningRef.current = false;
-      setNavigationDirection(pendingDirectionRef.current);
-      setIndex(nextIndex);
-      setIsTransitioning(false);
-      if (liveRef.current) {
-        liveRef.current.textContent = `Showing ${services[nextIndex].title}, service ${nextIndex + 1} of ${services.length}`;
-      }
-    }, TRANSITION_DURATION);
-  }, []);
+  const firstThreeServices = useMemo(() => services.slice(0, 3), []);
 
-  const prev = () => navigate((index - 1 + services.length) % services.length, "prev");
-  const next = () => navigate((index + 1) % services.length, "next");
-
-  const toggleExpanded = (serviceIndex: number) => {
-    setExpandedServices((prevState) => ({
-      ...prevState,
-      [serviceIndex]: !prevState[serviceIndex],
+  const toggleAccordionItem = (serviceIndex: number, itemIndex: number) => {
+    setOpenItemByService((previous) => ({
+      ...previous,
+      [serviceIndex]: previous[serviceIndex] === itemIndex ? -1 : itemIndex,
     }));
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      next();
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      prev();
-    }
-  };
-
-  const current = services[index];
-
   return (
-    <section id="services" className="relative overflow-hidden bg-gradient-to-b from-[#090909] via-[#111111] to-[#0b0b0b] text-white py-16 md:py-24 min-h-screen flex flex-col justify-center">
-      <div aria-hidden className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-red/10 blur-3xl" />
-        <div className="absolute bottom-8 right-8 h-56 w-56 rounded-full bg-white/5 blur-3xl" />
+    <section id="services" className="relative overflow-hidden py-24 text-white md:py-32">
+      <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,#090507_0%,#14070c_45%,#0a0406_100%)]" />
+        <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(to_right,rgba(255,255,255,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.15)_1px,transparent_1px)] [background-size:72px_72px]" />
+        <div className="absolute -left-28 top-16 h-80 w-80 rounded-full bg-[#c41e3a]/25 blur-[120px]" />
+        <div className="absolute -right-24 top-1/3 h-96 w-96 rounded-full bg-[#7a1c2d]/20 blur-[140px]" />
       </div>
 
-      <div className="container mx-auto px-6 mb-8 text-center relative z-10">
-        <p className="text-xs uppercase tracking-[0.24em] text-brand-red">Services</p>
-        <h1 className="text-3xl md:text-4xl font-extrabold mt-2 text-white leading-tight">
-          Professional testing &amp; inspection
-        </h1>
-      </div>
-
-      <div
-        role="region"
-        aria-roledescription="carousel"
-        aria-label="Services Carousel"
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
-        className="relative container mx-auto px-6 md:px-8 flex items-center outline-none z-10"
-      >
-        <button
-          aria-label="Previous service"
-          onClick={prev}
-          disabled={isTransitioning}
-          className="absolute left-2 z-20 border border-white/20 bg-black/60 backdrop-blur-sm hover:bg-black/80 p-2 rounded-full transition-colors disabled:opacity-50"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-
-        <div className="w-full px-10 md:px-16">
-          {services.map((service, i) => (
-            <div
-              key={service.title}
-              role="group"
-              aria-roledescription="slide"
-              aria-label={`${i + 1} of ${services.length}: ${service.title}`}
-              aria-hidden={i !== index ? "true" : "false"}
-              className={
-                i !== index
-                  ? "hidden"
-                  : `grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-8 items-start rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-sm shadow-[0_20px_60px_rgba(0,0,0,0.45)] p-5 md:p-8 ${navigationDirection === "prev" ? "animate-slide-in-left" : "animate-slide-in-right"}`
-              }
-            >
-              {/* Left: 3 image boxes */}
-              <div className="grid grid-cols-2 gap-3 md:gap-4">
-                <div className="relative border border-white/15 rounded-2xl overflow-hidden bg-black/30 shadow-[0_10px_30px_rgba(0,0,0,0.35)] aspect-[4/3]">
-                  <Image
-                    src={service.images[0].src}
-                    alt={service.images[0].alt}
-                    fill
-                    sizes="(max-width: 768px) 46vw, (max-width: 1280px) 28vw, 420px"
-                    className="object-cover"
-                    priority={i === 0}
-                  />
-                  <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-                </div>
-                <div className="relative border border-white/15 rounded-2xl overflow-hidden bg-black/30 shadow-[0_10px_30px_rgba(0,0,0,0.35)] aspect-[4/3]">
-                  <Image
-                    src={service.images[1].src}
-                    alt={service.images[1].alt}
-                    fill
-                    sizes="(max-width: 768px) 46vw, (max-width: 1280px) 28vw, 420px"
-                    className="object-cover"
-                    priority={i === 0}
-                  />
-                  <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-                </div>
-                <div className="relative col-span-2 border border-white/15 rounded-2xl overflow-hidden bg-black/30 shadow-[0_10px_30px_rgba(0,0,0,0.35)] aspect-[16/5]">
-                  <Image
-                    src={service.images[2].src}
-                    alt={service.images[2].alt}
-                    fill
-                    sizes="(max-width: 768px) 94vw, (max-width: 1280px) 58vw, 900px"
-                    className="object-cover"
-                    priority={i === 0}
-                  />
-                  <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-                </div>
-              </div>
-
-              {/* Right: title + sub-services */}
-              <div className="text-white">
-                <div className="w-12 h-px bg-gradient-to-r from-brand-red to-transparent mb-4" aria-hidden="true" />
-                <h2 className="text-3xl md:text-4xl font-bold mb-2 text-white leading-tight">{service.title}</h2>
-                <p className="text-gray-300 mb-5 leading-relaxed" style={{ fontSize: "1rem" }}>{service.summary}</p>
-                <p className="text-xs uppercase tracking-[0.16em] text-gray-400 mb-3">Key Capabilities</p>
-                <ul id={`service-list-${i}`} className={`grid gap-x-3 gap-y-0.5 ${i === 0 ? "grid-cols-2" : "grid-cols-1"}`}>
-                  {(expandedServices[i] ? service.subServices : service.subServices.slice(0, MAX_VISIBLE_SUBSERVICES)).map((sub) => (
-                    <li
-                      key={sub}
-                      className="flex items-start gap-1 text-white/90"
-                      style={{ fontSize: i === 0 ? "0.875rem" : "1.125rem", lineHeight: "1.5" }}
-                    >
-                      <span className="mt-1 w-1 h-1 rounded-full bg-brand-red flex-shrink-0" aria-hidden="true" />
-                      <span>{sub}</span>
-                    </li>
-                  ))}
-                </ul>
-                {service.subServices.length > MAX_VISIBLE_SUBSERVICES ? (
-                  <button
-                    onClick={() => toggleExpanded(i)}
-                    type="button"
-                    className="mt-4 text-sm font-semibold text-brand-red hover:text-white transition-colors"
-                    aria-expanded={expandedServices[i] ? "true" : "false"}
-                    aria-controls={`service-list-${i}`}
-                  >
-                    {expandedServices[i] ? "Show fewer capabilities" : `Show all ${service.subServices.length} capabilities`}
-                  </button>
-                ) : null}
-              </div>
-            </div>
-          ))}
+      <div className="relative z-10 mx-auto w-full max-w-[1180px] px-6 md:px-8">
+        <div className="mx-auto mb-14 max-w-2xl text-center md:mb-20">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#e56c81]">Our Services</p>
+          <h2 className="mt-3 text-4xl font-semibold tracking-tight text-white md:text-6xl">Reliable engineering services for better build outcomes</h2>
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-[#c7a3ae] md:text-base">
+            We provide laboratory testing, on-site inspection, and technical reporting with the precision and responsiveness modern projects require.
+          </p>
         </div>
 
-        <button
-          aria-label="Next service"
-          onClick={next}
-          disabled={isTransitioning}
-          className="absolute right-2 z-20 border border-white/20 bg-black/60 backdrop-blur-sm hover:bg-black/80 p-2 rounded-full transition-colors disabled:opacity-50"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
+        <div className="space-y-16 md:space-y-20">
+          {firstThreeServices.map((service, serviceIndex) => {
+            const isEvenRow = serviceIndex % 2 === 0;
+
+            return (
+              <article key={service.title} className="grid items-center gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
+                <div className={`${isEvenRow ? "md:order-1" : "md:order-2"}`}>
+                  <p className="mb-3 text-xs uppercase tracking-[0.2em] text-[#e56c81]">{`0${serviceIndex + 1}`}</p>
+                  <h3 className="text-3xl font-semibold leading-tight text-white md:text-4xl">{service.title}</h3>
+                  <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#c7a3ae] md:text-base">{service.summary}</p>
+
+                  <div className="mt-6 rounded-2xl border border-[#c85d72]/25 bg-[rgba(44,14,22,0.48)] px-4 py-2 backdrop-blur-sm md:px-5">
+                    {service.subServices.slice(0, 4).map((subService, itemIndex) => {
+                      const isOpen = openItemByService[serviceIndex] === itemIndex;
+                      const panelId = `service-panel-${serviceIndex}-${itemIndex}`;
+
+                      return (
+                        <div key={subService} className="border-b border-white/10 last:border-b-0">
+                          <button
+                            type="button"
+                            className="flex w-full items-center justify-between py-3 text-left text-[0.98rem] text-white/95 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d86a80]"
+                            aria-expanded={isOpen ? "true" : "false"}
+                            aria-controls={panelId}
+                            onClick={() => toggleAccordionItem(serviceIndex, itemIndex)}
+                          >
+                            <span>{subService}</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className={`h-4 w-4 flex-shrink-0 text-[#e48b9d] transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`}
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+                          <div
+                            id={panelId}
+                            className={`overflow-hidden transition-all duration-300 ${isOpen ? "max-h-28 pb-3 opacity-100" : "max-h-0 opacity-0"}`}
+                          >
+                            <p className="pr-6 text-sm leading-relaxed text-[#b88f9b]">
+                              {buildAccordionDescription(service.title, subService)}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className={`${isEvenRow ? "md:order-2" : "md:order-1"}`}>
+                  <div className="relative rounded-2xl border border-[#c85d72]/30 bg-[rgba(52,16,26,0.42)] p-2 shadow-[0_18px_60px_rgba(18,6,10,0.45)] backdrop-blur-md">
+                    <div className="grid grid-cols-2 grid-rows-[1.35fr_1fr] gap-1.5">
+                      <div className="relative col-span-2 min-h-[210px] overflow-hidden rounded-xl md:min-h-[260px]">
+                        <Image
+                          src={service.images[0].src}
+                          alt={service.images[0].alt}
+                          fill
+                          sizes="(max-width: 767px) 100vw, 42vw"
+                          className="object-cover"
+                          priority={serviceIndex === 0}
+                        />
+                        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                      </div>
+                      <div className="relative min-h-[110px] overflow-hidden rounded-xl md:min-h-[145px]">
+                        <Image
+                          src={service.images[1].src}
+                          alt={service.images[1].alt}
+                          fill
+                          sizes="(max-width: 767px) 50vw, 21vw"
+                          className="object-cover"
+                        />
+                        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                      </div>
+                      <div className="relative min-h-[110px] overflow-hidden rounded-xl md:min-h-[145px]">
+                        <Image
+                          src={service.images[2].src}
+                          alt={service.images[2].alt}
+                          fill
+                          sizes="(max-width: 767px) 50vw, 21vw"
+                          className="object-cover"
+                        />
+                        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="mt-20 rounded-3xl border border-white/10 bg-[linear-gradient(110deg,rgba(196,30,58,0.28)_0%,rgba(56,16,25,0.58)_30%,rgba(18,8,12,0.72)_100%)] p-8 shadow-[0_22px_64px_rgba(20,6,10,0.45)] backdrop-blur-sm md:mt-24 md:p-12">
+          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+            <h3 className="max-w-xl text-3xl font-medium leading-tight text-white md:text-5xl">
+              Let&apos;s build a safer, stronger project together.
+            </h3>
+            <a
+              href="#contact"
+              className="inline-flex items-center rounded-full border border-[#f09aad]/45 bg-[#c41e3a] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#a31931]"
+            >
+              Schedule a Consultation
+            </a>
+          </div>
+        </div>
       </div>
-
-      <div className="flex flex-wrap gap-2 justify-center mt-6 px-6">
-        {services.map((s, i) => (
-          <button
-            key={s.title}
-            onClick={() => {
-              if (i === index) return;
-              navigate(i, i > index ? "next" : "prev");
-            }}
-            disabled={isTransitioning}
-            aria-label={`Go to ${s.title}`}
-            aria-current={i === index ? "true" : undefined}
-            className={`rounded-full border px-3 py-1 text-xs tracking-wide uppercase transition-all duration-300 ${i === index ? "bg-brand-red border-brand-red text-white" : "bg-white/5 border-white/20 text-gray-300 hover:bg-white/10 hover:text-white"} disabled:opacity-50`}
-          >
-            {String(i + 1).padStart(2, "0")}
-          </button>
-        ))}
-      </div>
-
-      <p className="text-center text-gray-400 text-sm mt-2">{index + 1} of {services.length}</p>
-
-      <p
-        className="sr-only"
-        aria-live="polite"
-        aria-atomic="true"
-        ref={liveRef}
-      >
-        {`Showing ${current.title}, service ${index + 1} of ${services.length}`}
-      </p>
     </section>
   );
 }

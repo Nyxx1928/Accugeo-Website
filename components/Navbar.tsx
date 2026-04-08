@@ -88,7 +88,7 @@ export default function Navbar() {
           <img src="/LOGO.png" alt="Accugeo Logo" className="h-12 md:h-16" />
           <div className="flex flex-col text-white">
             <div className="text-base md:text-lg font-semibold leading-tight">
-              Accugeo Construction Materials and Testing Center
+              Accugeo
             </div>
           </div>
         </div>
