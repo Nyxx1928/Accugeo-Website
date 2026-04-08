@@ -42,7 +42,7 @@ export default function Footer() {
                 height={44}
                 className="h-11 w-11 object-contain"
               />
-              <span className="text-xl font-semibold tracking-tight">Accugeo</span>
+              <span className="text-xl font-semibold tracking-tight">ACTMC</span>
             </a>
             <p className="mt-4 text-sm leading-relaxed text-[#c7a3ae]">
               Crafting dependable material testing and engineering insights for safer, higher-confidence projects.
