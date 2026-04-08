@@ -3,10 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-    font-family: "Sansation", sans-serif;
-}
 
+:root {
+    --font-sans: 'Sansation, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
+}
 /* Large display-only shadow */
 .hero-heading,
 h1.display,

@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)', ...fontFamily.sans],
+        sans: ['Sansation', 'var(--font-sans)', ...fontFamily.sans],
       },
       colors: {
         border: 'var(--border)',
