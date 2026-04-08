@@ -7,10 +7,27 @@ export default function Contact() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
   type StatusKind = "success" | "error" | "pending";
   const [status, setStatus] = useState<null | { kind: StatusKind; message: string }>(null);
   const timeoutRef = useRef<number | null>(null);
   const mountedRef = useRef(true);
+  const serviceOptions = [
+    "Material Testing",
+    "Quality Inspection",
+    "Consulting & Reporting",
+    "Structural Assessment",
+    "Geotechnical Investigation",
+    "Non-Destructive Testing",
+  ];
+
+  const toggleService = (service: string) => {
+    setSelectedServices((prev) =>
+      prev.includes(service)
+        ? prev.filter((item) => item !== service)
+        : [...prev, service],
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +36,14 @@ export default function Contact() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, message }),
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          message,
+          serviceTypes: selectedServices,
+          serviceType: selectedServices.join(", "),
+        }),
       });
 
       const json = await res.json();
@@ -35,6 +59,7 @@ export default function Contact() {
       setEmail("");
       setPhone("");
       setMessage("");
+      setSelectedServices([]);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       setStatus({ kind: "error", message: msg || "Failed to send message." });
@@ -159,6 +184,37 @@ export default function Contact() {
                       />
                     </label>
                   </div>
+
+                  <fieldset className="flex min-h-[44px] flex-col">
+                    <legend className="mb-2 text-[11px] uppercase tracking-[0.16em] text-white/65">Service Type</legend>
+                    <div className="rounded-2xl border border-white/30 bg-[linear-gradient(145deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] p-3 shadow-[0_14px_36px_rgba(0,0,0,0.3)] backdrop-blur-xl">
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        {serviceOptions.map((service) => {
+                          const isSelected = selectedServices.includes(service);
+
+                          return (
+                            <label key={service} className="cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => toggleService(service)}
+                                className="peer sr-only"
+                              />
+                              <span
+                                className={`flex min-h-[42px] items-center rounded-xl border px-3 py-2 text-sm transition ${
+                                  isSelected
+                                    ? "border-white/55 bg-white/20 text-white"
+                                    : "border-white/20 bg-white/5 text-white/85 hover:bg-white/10"
+                                }`}
+                              >
+                                {service}
+                              </span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </fieldset>
 
                   <label className="flex min-h-[44px] flex-col">
                     <span className="mb-2 text-[11px] uppercase tracking-[0.16em] text-white/65">Project Information</span>
