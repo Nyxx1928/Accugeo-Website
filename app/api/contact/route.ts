@@ -3,6 +3,7 @@ import sgMail from "@sendgrid/mail";
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 const CONTACT_TO_EMAIL = process.env.CONTACT_TO_EMAIL;
+const CONTACT_FROM_EMAIL = process.env.CONTACT_FROM_EMAIL;
 const RATE_LIMIT_WINDOW_MS = Number(process.env.RATE_LIMIT_WINDOW_MS) || 60 * 60 * 1000; // default 1 hour
 const RATE_LIMIT_MAX = Number(process.env.RATE_LIMIT_MAX) || 6; // default 6 requests per window
 const RATE_STORE_MAX_SIZE = Number(process.env.RATE_STORE_MAX_SIZE) || 5000;
@@ -64,7 +65,7 @@ export async function POST(req: Request) {
 
   try {
     const data = await req.json();
-    const { name, email, phone, message } = data || {};
+    const { name, email, phone, message, serviceType, serviceTypes } = data || {};
 
     // validate types and simple length limits
     if (typeof name !== "string" || typeof email !== "string" || typeof message !== "string") {
@@ -110,28 +111,52 @@ export async function POST(req: Request) {
     const safePhone = escapeHtml(tPhone || "N/A");
     const safeMessage = escapeHtml(tMessage).replace(/\n/g, "<br />");
 
+    const normalizedServiceTypes = Array.isArray(serviceTypes)
+      ? serviceTypes.filter((item): item is string => typeof item === "string").map((item) => item.trim()).filter(Boolean)
+      : [];
+    const fallbackServiceType = typeof serviceType === "string" ? serviceType.trim() : "";
+    const serviceTypeText = normalizedServiceTypes.length > 0
+      ? normalizedServiceTypes.join(", ")
+      : fallbackServiceType || "N/A";
+
+    const fromEmail = (CONTACT_FROM_EMAIL || CONTACT_TO_EMAIL)?.trim();
     const msg = {
       to: CONTACT_TO_EMAIL,
-      from: CONTACT_TO_EMAIL,
+      from: fromEmail,
       subject: `New contact form message from ${safeName}`,
       replyTo: tEmail,
-      text: `Name: ${tName}\nEmail: ${tEmail}\nPhone: ${tPhone || "N/A"}\n\n${tMessage}`,
+      text: `Name: ${tName}\nEmail: ${tEmail}\nPhone: ${tPhone || "N/A"}\nService Type: ${serviceTypeText}\n\n${tMessage}`,
       html: `<h3>New contact form message</h3>
              <p><strong>Name:</strong> ${safeName}</p>
              <p><strong>Email:</strong> ${safeEmail}</p>
              <p><strong>Phone:</strong> ${safePhone}</p>
+             <p><strong>Service Type:</strong> ${escapeHtml(serviceTypeText)}</p>
              <hr />
              <p>${safeMessage}</p>`,
     };
 
-    await sgMail.send(msg);
+    const [sendResponse] = await sgMail.send(msg);
+    const messageIdHeader = sendResponse?.headers?.["x-message-id"];
+    const messageId =
+      (Array.isArray(messageIdHeader) ? messageIdHeader[0] : messageIdHeader) || null;
 
-    return NextResponse.json({ message: "Message sent" }, { status: 200 });
+    return NextResponse.json({ message: "Message sent", messageId }, { status: 200 });
   } catch (err: unknown) {
     // eslint-disable-next-line no-console
     const msg = err instanceof Error ? err.message : String(err);
+    const errorWithResponse = err as { response?: { body?: { errors?: Array<{ message?: string }> } } };
+    const providerErrors = errorWithResponse?.response?.body?.errors
+      ?.map((item) => item?.message)
+      .filter(Boolean)
+      .join("; ");
     // eslint-disable-next-line no-console
-    console.error("Error sending contact email:", msg);
-    return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
+    console.error("Error sending contact email:", providerErrors || msg);
+    return NextResponse.json(
+      {
+        error: "Failed to send message",
+        details: providerErrors || undefined,
+      },
+      { status: 500 },
+    );
   }
 }
