@@ -188,6 +188,17 @@ export default function Contact() {
                         className={fieldBaseClass}
                       />
                     </label>
+
+                    <label className="flex min-h-[44px] flex-col sm:col-span-2">
+                      <span className="mb-2 text-[11px] uppercase tracking-[0.16em] text-white/65">Phone</span>
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="Your phone number"
+                        className={fieldBaseClass}
+                      />
+                    </label>
                   </div>
 
                   <fieldset className="flex min-h-[44px] flex-col">
