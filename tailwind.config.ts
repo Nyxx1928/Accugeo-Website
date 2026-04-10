@@ -12,6 +12,17 @@ const config: Config = {
       fontFamily: {
         sans: ['Sansation', 'var(--font-sans)', ...fontFamily.sans],
       },
+      spacing: {
+        touch: '2.75rem',
+        'section-mobile': '4rem',
+        'section-desktop': '6rem',
+      },
+      fontSize: {
+        'body-mobile': ['1rem', { lineHeight: '1.6' }],
+        'body-desktop': ['1.0625rem', { lineHeight: '1.65' }],
+        'heading-1': ['clamp(2rem, 6vw, 3.75rem)', { lineHeight: '1.05' }],
+        'heading-2': ['clamp(1.625rem, 4.8vw, 2.75rem)', { lineHeight: '1.1' }],
+      },
       colors: {
         border: 'var(--border)',
         input: 'var(--input)',
