@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import {
   NavigationMenu,
@@ -9,6 +10,8 @@ import {
   NavigationMenuIndicator,
   NavigationMenuViewport,
 } from "./ui/navigation-menu";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+import MobileNavDrawer from "./MobileNavDrawer";
 
 function scrollToSection(sectionId: string) {
   const element = document.getElementById(sectionId);
@@ -20,11 +23,36 @@ function scrollToSection(sectionId: string) {
   window.scrollTo({ top: y, behavior: "smooth" });
 }
 
+const navItems = [
+  { id: "home", label: "Home" },
+  { id: "about", label: "About" },
+  { id: "services", label: "Services" },
+  { id: "contact", label: "Contact" },
+] as const;
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeSection, setActiveSection] =
+    useState<(typeof navItems)[number]["id"]>("home");
   const drawerRef = useRef<HTMLDivElement | null>(null);
+  const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  const closeDurationClass = prefersReducedMotion
+    ? "duration-0"
+    : "duration-200";
+
+  const handleNavigation = (sectionId: (typeof navItems)[number]["id"]) => {
+    setActiveSection(sectionId);
+    if (isOpen) {
+      setIsOpen(false);
+      setTimeout(() => scrollToSection(sectionId), prefersReducedMotion ? 0 : 120);
+      return;
+    }
+    scrollToSection(sectionId);
+  };
 
   // Prevent background scroll and manage focus when drawer opens/closes
   useEffect(() => {
@@ -44,6 +72,34 @@ export default function Navbar() {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    const sections = navItems
+      .map((item) => document.getElementById(item.id))
+      .filter((section): section is HTMLElement => Boolean(section));
+
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visibleEntries.length > 0) {
+          setActiveSection(visibleEntries[0].target.id as (typeof navItems)[number]["id"]);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "-36% 0px -52% 0px",
+        threshold: [0.15, 0.35, 0.55],
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
 
   // Key handling: Escape to close; simple focus trap (cycle focus inside drawer)
   useEffect(() => {
@@ -82,10 +138,18 @@ export default function Navbar() {
   }, [isOpen]);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 text-white bg-black/30 backdrop-blur-sm shadow-lg">
-      <div className="relative flex items-center justify-between py-1 px-4 z-10">
-        <div className="flex items-center gap-4 ml-4 md:ml-16">
-          <img src="/LOGO.png" alt="Accugeo Logo" className="h-12 md:h-16" />
+    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/65 text-white shadow-lg backdrop-blur-md">
+      <div className="relative z-10 mx-auto flex h-16 max-w-[1400px] items-center justify-between px-4 md:h-20 md:px-8">
+        <div className="flex items-center gap-3 md:gap-4">
+          <Image
+            src="/LOGO.png"
+            alt="Accugeo Logo"
+            width={64}
+            height={64}
+            priority
+            sizes="(max-width: 768px) 48px, 64px"
+            className="h-12 w-12 md:h-16 md:w-16"
+          />
           <div className="flex flex-col text-white">
             <div className="text-base md:text-lg font-semibold leading-tight">
               ACTMC
@@ -96,18 +160,18 @@ export default function Navbar() {
         {/* Mobile hamburger */}
         <div className="flex items-center md:hidden">
           <button
-            ref={closeButtonRef}
+            ref={toggleButtonRef}
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
             aria-controls="mobile-nav"
-            className="p-2 mr-4 focus-visible:outline-none"
+            className="mr-1 inline-flex min-h-11 min-w-11 items-center justify-center rounded-md p-2 focus-visible:outline-none"
             onClick={() => setIsOpen((s) => !s)}
           >
             {isOpen ? (
               // Close icon
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8"
+                className="h-7 w-7"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -123,7 +187,7 @@ export default function Navbar() {
               // Hamburger icon
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8"
+                className="h-7 w-7"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -139,130 +203,45 @@ export default function Navbar() {
           </button>
         </div>
 
-        <NavigationMenu className="hidden md:flex mr-4 md:mr-16">
+        <NavigationMenu className="mr-0 hidden md:flex">
           <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                asChild
-                className="text-lg font-normal px-8 py-1 hover:bg-muted/30 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:outline-none cursor-pointer"
-                onClick={() => scrollToSection("home")}
-              >
-                <span>Home</span>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                asChild
-                className="text-lg font-normal px-8 py-1 hover:bg-muted/30 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:outline-none cursor-pointer"
-                onClick={() => scrollToSection("about")}
-              >
-                <span>About</span>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                asChild
-                className="text-lg font-normal px-8 py-1 hover:bg-muted/30 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:outline-none cursor-pointer"
-                onClick={() => scrollToSection("services")}
-              >
-                <span>Services</span>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                asChild
-                className="text-lg font-normal px-8 py-1 hover:bg-muted/30 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:outline-none cursor-pointer"
-                onClick={() => scrollToSection("contact")}
-              >
-                <span>Contact</span>
-              </NavigationMenuLink>
-            </NavigationMenuItem>
+            {navItems.map((item) => (
+              <NavigationMenuItem key={item.id}>
+                <NavigationMenuLink
+                  asChild
+                  className={`rounded-lg px-6 py-2 text-base font-normal transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus:bg-transparent data-[active]:bg-transparent ${
+                    activeSection === item.id
+                      ? "bg-[#c41e3a]/35 text-white hover:bg-[#c41e3a]/45 focus:bg-[#c41e3a]/35 data-[active]:bg-[#c41e3a]/35 data-[active]:text-white"
+                      : "text-white/85 hover:bg-white/10 hover:text-white focus:bg-white/10 focus:text-white"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    aria-current={activeSection === item.id ? "page" : undefined}
+                    className="min-h-11 cursor-pointer"
+                    onClick={() => handleNavigation(item.id)}
+                  >
+                    {item.label}
+                  </button>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            ))}
           </NavigationMenuList>
           <NavigationMenuIndicator />
           <NavigationMenuViewport />
         </NavigationMenu>
       </div>
 
-      {/* Mobile off-canvas nav */}
-      {isOpen && (
-        <div
-          id="mobile-nav"
-          role="dialog"
-          aria-modal="true"
-          ref={drawerRef}
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col p-6 md:hidden"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <img src="/LOGO.png" alt="Accugeo Logo" className="h-12" />
-              <div className="flex flex-col text-white">
-                <div className="text-sm font-semibold">
-                  Accugeo Construction Materials and Testing Center
-                </div>
-              </div>
-            </div>
-            <button
-              aria-label="Close menu"
-              className="p-2 focus-visible:outline-none"
-              onClick={() => setIsOpen(false)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-7 w-7"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-
-          <nav className="flex flex-col gap-4">
-            <button
-              className="text-left text-2xl font-normal text-white p-2 focus-visible:ring-2 focus-visible:ring-brand-red"
-              onClick={() => {
-                setIsOpen(false);
-                setTimeout(() => scrollToSection("home"), 60);
-              }}
-            >
-              Home
-            </button>
-            <button
-              className="text-left text-2xl font-normal text-white p-2 focus-visible:ring-2 focus-visible:ring-brand-red"
-              onClick={() => {
-                setIsOpen(false);
-                setTimeout(() => scrollToSection("about"), 60);
-              }}
-            >
-              About
-            </button>
-            <button
-              className="text-left text-2xl font-normal text-white p-2 focus-visible:ring-2 focus-visible:ring-brand-red"
-              onClick={() => {
-                setIsOpen(false);
-                setTimeout(() => scrollToSection("services"), 60);
-              }}
-            >
-              Services
-            </button>
-            <button
-              className="text-left text-2xl font-normal text-white p-2 focus-visible:ring-2 focus-visible:ring-brand-red"
-              onClick={() => {
-                setIsOpen(false);
-                setTimeout(() => scrollToSection("contact"), 60);
-              }}
-            >
-              Contact
-            </button>
-          </nav>
-        </div>
-      )}
+      <MobileNavDrawer
+        isOpen={isOpen}
+        navItems={navItems}
+        activeSection={activeSection}
+        closeDurationClass={closeDurationClass}
+        drawerRef={drawerRef}
+        closeButtonRef={closeButtonRef}
+        onClose={() => setIsOpen(false)}
+        onNavigate={handleNavigation}
+      />
     </nav>
   );
 }
