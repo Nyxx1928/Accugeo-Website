@@ -12,6 +12,9 @@ type Service = {
   images: [ServiceImage, ServiceImage, ServiceImage];
 };
 
+const MOBILE_VISIBLE_SUBSERVICES = 4;
+const MAX_VISIBLE_SUBSERVICES = 6;
+
 const services: Service[] = [
   {
     title: "Material Testing",
@@ -138,6 +141,7 @@ export default function Services() {
       return acc;
     }, {});
   });
+  const [expandedServiceLists, setExpandedServiceLists] = useState<Record<number, boolean>>({});
 
   const firstThreeServices = useMemo(() => services, []);
 
@@ -145,6 +149,13 @@ export default function Services() {
     setOpenItemByService((previous) => ({
       ...previous,
       [serviceIndex]: previous[serviceIndex] === itemIndex ? -1 : itemIndex,
+    }));
+  };
+
+  const toggleSubServiceList = (serviceIndex: number) => {
+    setExpandedServiceLists((previous) => ({
+      ...previous,
+      [serviceIndex]: !previous[serviceIndex],
     }));
   };
 
@@ -169,6 +180,11 @@ export default function Services() {
         <div className="space-y-16 md:space-y-20">
           {firstThreeServices.map((service, serviceIndex) => {
             const isEvenRow = serviceIndex % 2 === 0;
+            const isMobileListExpanded = expandedServiceLists[serviceIndex] ?? false;
+            const isClippableService = service.title === "Material Testing";
+            const hasHiddenItems = isClippableService
+              ? false
+              : service.subServices.length > MOBILE_VISIBLE_SUBSERVICES;
 
             return (
               <article key={service.title} className="grid items-center gap-8 md:grid-cols-2 md:gap-12 lg:gap-16">
@@ -178,15 +194,23 @@ export default function Services() {
                   <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#c7a3ae] md:text-base">{service.summary}</p>
 
                   <div className="mt-6 rounded-2xl border border-[#c85d72]/25 bg-[rgba(44,14,22,0.48)] px-4 py-2 backdrop-blur-sm md:px-5">
-                    {service.subServices.slice(0, 4).map((subService, itemIndex) => {
+                    {service.subServices.map((subService, itemIndex) => {
                       const isOpen = openItemByService[serviceIndex] === itemIndex;
                       const panelId = `service-panel-${serviceIndex}-${itemIndex}`;
+                      const isMobileHidden =
+                        itemIndex >= MOBILE_VISIBLE_SUBSERVICES &&
+                        !isMobileListExpanded;
+                      const isClippedAllView =
+                        isClippableService && itemIndex >= MAX_VISIBLE_SUBSERVICES;
 
                       return (
-                        <div key={subService} className="border-b border-white/10 last:border-b-0">
+                        <div
+                          key={subService}
+                          className={`border-b border-white/10 last:border-b-0 ${isClippedAllView ? "hidden" : isMobileHidden ? "hidden md:block" : ""}`}
+                        >
                           <button
                             type="button"
-                            className="flex w-full items-center justify-between py-3 text-left text-[0.98rem] text-white/95 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d86a80]"
+                            className="flex min-h-[44px] w-full items-center justify-between py-3 text-left text-[0.98rem] text-white/95 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d86a80]"
                             aria-expanded={isOpen ? "true" : "false"}
                             aria-controls={panelId}
                             onClick={() => toggleAccordionItem(serviceIndex, itemIndex)}
@@ -214,6 +238,18 @@ export default function Services() {
                         </div>
                       );
                     })}
+                    {hasHiddenItems && (
+                      <div className="pt-2 md:hidden">
+                        <button
+                          type="button"
+                          className="inline-flex min-h-11 items-center justify-center rounded-md border border-white/20 px-3 py-2 text-sm font-medium text-white/90 transition-colors hover:border-white/35 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d86a80]"
+                          onClick={() => toggleSubServiceList(serviceIndex)}
+                          aria-expanded={isMobileListExpanded}
+                        >
+                          {isMobileListExpanded ? "Show less" : "Show more"}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
 
