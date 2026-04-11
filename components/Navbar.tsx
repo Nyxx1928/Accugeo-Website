@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -32,17 +32,20 @@ const navItems = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] =
     useState<(typeof navItems)[number]["id"]>("home");
-  const drawerRef = useRef<HTMLDivElement | null>(null);
-  const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
-  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
-  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
   const closeDurationClass = prefersReducedMotion
     ? "duration-0"
     : "duration-200";
+
+  const mobileSurfaceClass = isOpen
+    ? "bg-[#07080c]/96 border-white/15 shadow-[0_10px_36px_rgba(0,0,0,0.48)] backdrop-blur-xl"
+    : isScrolled
+      ? "bg-[#07080c]/92 border-white/15 shadow-[0_8px_28px_rgba(0,0,0,0.4)] backdrop-blur-lg"
+      : "bg-[#07080c]/88 border-white/12 shadow-[0_6px_20px_rgba(0,0,0,0.34)] backdrop-blur-md";
 
   const handleNavigation = (sectionId: (typeof navItems)[number]["id"]) => {
     setActiveSection(sectionId);
@@ -53,25 +56,6 @@ export default function Navbar() {
     }
     scrollToSection(sectionId);
   };
-
-  // Prevent background scroll and manage focus when drawer opens/closes
-  useEffect(() => {
-    if (isOpen) {
-      previouslyFocusedRef.current =
-        document.activeElement as HTMLElement | null;
-      document.body.style.overflow = "hidden";
-      // focus the close button once the drawer is in the DOM
-      setTimeout(() => {
-        closeButtonRef.current?.focus();
-      }, 0);
-    } else {
-      document.body.style.overflow = "";
-      previouslyFocusedRef.current?.focus();
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
 
   useEffect(() => {
     const sections = navItems
@@ -101,36 +85,23 @@ export default function Navbar() {
     return () => observer.disconnect();
   }, []);
 
-  // Key handling: Escape to close; simple focus trap (cycle focus inside drawer)
+  useEffect(() => {
+    function onScroll() {
+      setIsScrolled(window.scrollY > 10);
+    }
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Key handling: Escape to close mobile menu
   useEffect(() => {
     function onKeyDown(ev: KeyboardEvent) {
       if (!isOpen) return;
       if (ev.key === "Escape") {
         ev.preventDefault();
         setIsOpen(false);
-        return;
-      }
-      if (ev.key === "Tab" && drawerRef.current) {
-        const focusable = Array.from(
-          drawerRef.current.querySelectorAll<HTMLElement>(
-            'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])',
-          ),
-        ).filter(
-          (el) => !el.hasAttribute("disabled") && el.offsetParent !== null,
-        );
-        if (focusable.length === 0) {
-          ev.preventDefault();
-          return;
-        }
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (ev.shiftKey && document.activeElement === first) {
-          ev.preventDefault();
-          last.focus();
-        } else if (!ev.shiftKey && document.activeElement === last) {
-          ev.preventDefault();
-          first.focus();
-        }
       }
     }
     document.addEventListener("keydown", onKeyDown);
@@ -138,7 +109,9 @@ export default function Navbar() {
   }, [isOpen]);
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/65 text-white shadow-lg backdrop-blur-md">
+    <nav
+      className={`fixed left-0 right-0 top-0 z-50 border-b text-white transition-[background-color,box-shadow,border-color] duration-200 ${mobileSurfaceClass} md:border-white/10 md:bg-black/65 md:shadow-lg md:backdrop-blur-md`}
+    >
       <div className="relative z-10 mx-auto flex h-16 max-w-[1400px] items-center justify-between px-4 md:h-20 md:px-8">
         <div className="flex items-center gap-3 md:gap-4">
           <Image
@@ -160,46 +133,23 @@ export default function Navbar() {
         {/* Mobile hamburger */}
         <div className="flex items-center md:hidden">
           <button
-            ref={toggleButtonRef}
             aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
             aria-controls="mobile-nav"
             className="mr-1 inline-flex min-h-11 min-w-11 items-center justify-center rounded-md p-2 focus-visible:outline-none"
             onClick={() => setIsOpen((s) => !s)}
           >
-            {isOpen ? (
-              // Close icon
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-7 w-7"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              // Hamburger icon
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-7 w-7"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            )}
+            <span className="relative flex h-5 w-6 flex-col justify-between">
+              <span
+                className={`block h-0.5 w-full origin-center rounded bg-white transition-transform ${closeDurationClass} ${isOpen ? "translate-y-[9px] rotate-45" : ""}`}
+              />
+              <span
+                className={`block h-0.5 w-full rounded bg-white transition-opacity ${closeDurationClass} ${isOpen ? "opacity-0" : "opacity-100"}`}
+              />
+              <span
+                className={`block h-0.5 w-full origin-center rounded bg-white transition-transform ${closeDurationClass} ${isOpen ? "-translate-y-[9px] -rotate-45" : ""}`}
+              />
+            </span>
           </button>
         </div>
 
@@ -237,9 +187,6 @@ export default function Navbar() {
         navItems={navItems}
         activeSection={activeSection}
         closeDurationClass={closeDurationClass}
-        drawerRef={drawerRef}
-        closeButtonRef={closeButtonRef}
-        onClose={() => setIsOpen(false)}
         onNavigate={handleNavigation}
       />
     </nav>
