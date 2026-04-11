@@ -24,7 +24,7 @@ export default function About() {
       <style>{`#about canvas { z-index: 0 !important; pointer-events: none !important; }`}</style>
       <div className="container mx-auto px-4 sm:px-6 w-full relative z-10">
         <div className="max-w-7xl mx-auto grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-16 items-center">
-          <div className="relative flex justify-center md:justify-start">
+          <div className="order-2 md:order-1 relative flex justify-center md:justify-start">
             <div className="w-full max-w-[560px] md:w-[520px] h-auto md:h-[420px] relative overflow-visible">
               <div aria-hidden className="absolute -left-6 -top-6 h-[320px] w-[320px] rounded-full blur-3xl md:h-[420px] md:w-[420px]" style={{ background: 'radial-gradient(ellipse at center, rgba(196,30,58,0.08) 0%, transparent 70%)', zIndex: 0 }} />
               <div className="relative z-20 aspect-[9/7] w-full overflow-hidden rounded-3xl border border-[#2b2b2b] shadow-2xl md:absolute md:left-0 md:top-6 md:w-3/4 md:-rotate-2 animate-scale-in transform-gpu">
@@ -59,7 +59,7 @@ export default function About() {
             </div>
           </div>
 
-          <div className="text-white">
+          <div className="order-1 md:order-2 text-white">
             <div className="flex items-center gap-4 mb-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0ms' }}>
               <div className="w-1.5 h-6 bg-[#C41E3A] rounded" aria-hidden />
               <div className="text-xs tracking-widest text-[#C41E3A]">ABOUT US</div>
