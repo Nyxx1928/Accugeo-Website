@@ -49,13 +49,13 @@ export default function About() {
                 />
               </div>
 
-              {/* Moved stat badge out of the image overlay to a dedicated, modern badge below the images */}
+              {/* Moved stat badge out of the image overlay to a dedicated, modern badge below the images
               <div className="mt-6 md:mt-4 flex justify-center md:justify-start">
                 <div className="inline-flex items-center gap-3 bg-white/6 hover:bg-white/8 transition-colors duration-200 px-4 py-2 rounded-2xl border border-white/10 shadow-lg">
                   <div className="text-2xl font-bold text-white">25+</div>
                   <div className="text-sm text-gray-300">Years of Excellence</div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
