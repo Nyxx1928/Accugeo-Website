@@ -11,6 +11,25 @@ env:
   IMAGE_TAG: accugeo-website:ci-${{ github.sha }}
 
 jobs:
+  pr-docker-build:
+    name: "PR: Docker Build"
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Dockerfile exists
+        run: |
+          if [ ! -f Dockerfile ]; then
+            echo "::error::Dockerfile not found at repository root."
+            exit 1
+          fi
+
+      - name: Build Docker image for PR
+        run: docker build -t "accugeo-website:pr-${{ github.sha }}" .
+
   phase-1-lint-validate:
     name: "Phase 1: Lint and Validate"
     runs-on: ubuntu-latest
@@ -253,7 +272,7 @@ jobs:
           docker run -d --name accugeo-ci -p 3000:3000 "$IMAGE_TAG"
           healthy=0
           for i in $(seq 1 30); do
-            if curl -fsS http://127.0.0.1:3000 >/dev/null; then
+            if curl -fsS http://127.0.0.1:3000/api/health >/dev/null; then
               healthy=1
               break
             fi

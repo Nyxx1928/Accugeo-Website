@@ -25,16 +25,107 @@ A modern website for Accugeo Construction Materials and Testing Center built wit
 ## Getting Started
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Run the development server:
+
 ```bash
 npm run dev
 ```
 
 3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Docker
+
+This repository includes a multi-stage Dockerfile and Docker Compose setup for both development and production.
+
+### Prerequisites
+
+- Docker Desktop (or Docker Engine + Compose plugin)
+
+### Environment files
+
+Production container:
+
+```bash
+cp .env.docker.example .env.docker
+```
+
+Development container:
+
+```bash
+cp .env.example .env.local
+```
+
+### Run production container
+
+```bash
+docker compose up --build web
+```
+
+If port 3000 is already in use, set `HOST_PORT`:
+
+```bash
+HOST_PORT=3001 docker compose up --build web
+```
+
+PowerShell:
+
+```powershell
+$env:HOST_PORT=3001; docker compose up --build web
+```
+
+Or with npm scripts:
+
+```bash
+npm run docker:prod
+```
+
+App URL: [http://localhost:3000](http://localhost:3000)
+Health URL: [http://localhost:3000/api/health](http://localhost:3000/api/health)
+
+### Run development container (hot reload)
+
+```bash
+docker compose --profile dev up --build web-dev
+```
+
+If port 3000 is already in use, set `HOST_PORT`:
+
+```bash
+HOST_PORT=3001 docker compose --profile dev up --build web-dev
+```
+
+PowerShell:
+
+```powershell
+$env:HOST_PORT=3001; docker compose --profile dev up --build web-dev
+```
+
+Or with npm scripts:
+
+```bash
+npm run docker:dev
+```
+
+### Useful Docker commands
+
+```bash
+npm run docker:build
+npm run docker:up
+npm run docker:logs
+npm run docker:down
+npm run docker:dev:down
+```
+
+Check container health status:
+
+```bash
+docker compose ps
+```
 
 ## Project Structure
 

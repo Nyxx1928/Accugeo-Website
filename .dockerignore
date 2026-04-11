@@ -5,8 +5,12 @@
 .vscode
 node_modules
 coverage
+docu
+tests
 playwright-report
 test-results
+integration-test-results.json
+*.tsbuildinfo
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
