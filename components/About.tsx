@@ -22,42 +22,44 @@ export default function About() {
         <Squares speed={0.5} squareSize={40} direction="diagonal" borderColor="#1a1a1a" hoverFillColor="#1a1a1a" />
       </div>
       <style>{`#about canvas { z-index: 0 !important; pointer-events: none !important; }`}</style>
-      <div className="container mx-auto px-6 w-full relative z-10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div className="relative flex justify-center md:justify-start">
-            <div className="w-full md:w-[520px] h-auto md:h-[420px] relative overflow-visible">
-              <div aria-hidden className="absolute -left-6 -top-6 w-[420px] h-[420px] rounded-full blur-3xl" style={{ background: 'radial-gradient(ellipse at center, rgba(196,30,58,0.08) 0%, transparent 70%)', zIndex: 0 }} />
-              <Image
-                src="/pic sec 5.png"
-                alt="interior sample"
-                className="md:absolute left-0 md:top-6 md:w-3/4 w-full rounded-3xl shadow-2xl object-cover border border-[#2b2b2b] animate-scale-in md:z-30 z-20 md:-rotate-2 transform-gpu"
-                style={{ animationDelay: '200ms' }}
-                width={900}
-                height={700}
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 420px"
-              />
-              <Image
-                src="/pic sec 6.png"
-                alt="interior sample 2"
-                className="md:absolute right-0 md:top-0 md:w-3/4 w-full rounded-3xl shadow-2xl object-cover border border-[#2b2b2b] md:translate-x-6 md:translate-y-10 animate-scale-in md:z-20 z-10 md:rotate-2 transform-gpu mt-6 md:mt-0"
-                style={{ animationDelay: '220ms' }}
-                width={900}
-                height={700}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 420px"
-              />
+      <div className="container mx-auto px-4 sm:px-6 w-full relative z-10">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-16 items-center">
+          <div className="order-2 md:order-1 relative flex justify-center md:justify-start">
+            <div className="w-full max-w-[560px] md:w-[520px] h-auto md:h-[420px] relative overflow-visible">
+              <div aria-hidden className="absolute -left-6 -top-6 h-[320px] w-[320px] rounded-full blur-3xl md:h-[420px] md:w-[420px]" style={{ background: 'radial-gradient(ellipse at center, rgba(196,30,58,0.08) 0%, transparent 70%)', zIndex: 0 }} />
+              <div className="relative z-20 aspect-[9/7] w-full overflow-hidden rounded-3xl border border-[#2b2b2b] shadow-2xl md:absolute md:left-0 md:top-6 md:w-3/4 md:-rotate-2 animate-scale-in transform-gpu">
+                <Image
+                  src="/pic sec 5.png"
+                  alt="interior sample"
+                  fill
+                  className="object-cover"
+                  style={{ animationDelay: '200ms' }}
+                  priority
+                  sizes="(max-width: 767px) 100vw, (max-width: 1200px) 42vw, 420px"
+                />
+              </div>
+              <div className="relative z-10 mt-4 aspect-[9/7] w-full overflow-hidden rounded-3xl border border-[#2b2b2b] shadow-2xl md:absolute md:right-0 md:top-0 md:mt-0 md:w-3/4 md:translate-x-6 md:translate-y-10 md:rotate-2 animate-scale-in transform-gpu">
+                <Image
+                  src="/pic sec 6.png"
+                  alt="interior sample 2"
+                  fill
+                  className="object-cover"
+                  style={{ animationDelay: '220ms' }}
+                  sizes="(max-width: 767px) 100vw, (max-width: 1200px) 42vw, 420px"
+                />
+              </div>
 
-              {/* Moved stat badge out of the image overlay to a dedicated, modern badge below the images */}
+              {/* Moved stat badge out of the image overlay to a dedicated, modern badge below the images
               <div className="mt-6 md:mt-4 flex justify-center md:justify-start">
                 <div className="inline-flex items-center gap-3 bg-white/6 hover:bg-white/8 transition-colors duration-200 px-4 py-2 rounded-2xl border border-white/10 shadow-lg">
                   <div className="text-2xl font-bold text-white">25+</div>
                   <div className="text-sm text-gray-300">Years of Excellence</div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
-          <div className="text-white">
+          <div className="order-1 md:order-2 text-white">
             <div className="flex items-center gap-4 mb-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0ms' }}>
               <div className="w-1.5 h-6 bg-[#C41E3A] rounded" aria-hidden />
               <div className="text-xs tracking-widest text-[#C41E3A]">ABOUT US</div>
@@ -77,7 +79,7 @@ export default function About() {
               <p className="text-base md:text-lg text-gray-400 leading-relaxed mt-4 animate-fade-in-up opacity-0" style={{ animationDelay: '360ms' }}>
                 At Accugeo, we combine technical expertise with unwavering professionalism to build lasting trust with our clients — empowering the construction industry with quality data they can confidently build upon.
               </p>
-              <div className="flex items-center gap-6 mt-6">
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
                 <div className="flex items-center gap-2 text-gray-300 animate-fade-in-up opacity-0" style={{ animationDelay: '320ms' }}>
                   <Layers className="w-5 h-5 text-[#C41E3A]" aria-hidden />
                   <span>Product Sourcing</span>

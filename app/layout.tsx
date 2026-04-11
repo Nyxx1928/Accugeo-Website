@@ -18,7 +18,7 @@ export default function RootLayout({
         <link href="https://fonts.cdnfonts.com/css/sansation" rel="stylesheet" />
       </head>
       <body>
-        <main className="pt-20">{children}</main>
+        <main>{children}</main>
       </body>
     </html>
   )

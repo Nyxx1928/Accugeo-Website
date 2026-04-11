@@ -82,7 +82,7 @@ export default function Contact() {
   }, []);
 
   const fieldBaseClass =
-    "w-full bg-transparent border-0 border-b border-white/35 px-0 pb-2 text-white placeholder:text-white/40 focus:border-white/85 focus:outline-none";
+    "w-full bg-transparent border-0 border-b border-white/35 px-0 pb-2 text-base text-white placeholder:text-white/40 focus:border-white/85 focus:outline-none";
 
   return (
     <section id="contact" className="relative overflow-hidden bg-[#0a0b0d] py-16 text-white md:py-24">
@@ -94,9 +94,9 @@ export default function Contact() {
 
       <div className="relative mx-auto w-full max-w-[1120px] px-4 sm:px-6">
         <div className="relative min-h-[680px] overflow-hidden border border-white/15 bg-[#08090c]">
-          <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-full bg-[radial-gradient(circle_at_20%_12%,rgba(255,255,255,0.14),transparent_32%),linear-gradient(135deg,#1b1f28_0%,#10131a_42%,#050608_100%)] lg:w-[58%]" />
-          <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-full opacity-40 [background-image:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px] lg:w-[58%]" />
-          <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 w-full bg-[radial-gradient(circle_at_30%_18%,rgba(211,31,47,0.74),rgba(94,13,22,0.9)_42%,rgba(10,10,13,0.99)_100%)] lg:w-[52%]" />
+          <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-full bg-[radial-gradient(circle_at_20%_12%,rgba(255,255,255,0.1),transparent_32%),linear-gradient(135deg,#1b1f28_0%,#10131a_42%,#050608_100%)] lg:w-[58%]" />
+          <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-full opacity-25 md:opacity-40 [background-image:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px] lg:w-[58%]" />
+          <div aria-hidden className="pointer-events-none absolute inset-y-0 right-0 w-full bg-[radial-gradient(circle_at_30%_18%,rgba(211,31,47,0.6),rgba(94,13,22,0.88)_42%,rgba(10,10,13,0.99)_100%)] lg:w-[52%]" />
           <div aria-hidden className="pointer-events-none absolute inset-0 bg-black/40" />
 
           <div className="relative z-10 flex h-full min-h-[680px] flex-col px-6 pb-8 pt-6 md:px-10 md:pb-10 md:pt-8 lg:px-12 lg:pt-10">
@@ -105,14 +105,14 @@ export default function Contact() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  className="rounded-full border border-white/50 px-4 py-1.5 text-[11px] uppercase tracking-[0.16em] text-white/90 transition hover:border-white hover:bg-white/10 hover:no-underline"
+                  className="rounded-full border border-white/50 px-4 py-2 text-[11px] uppercase tracking-[0.16em] text-white/90 transition hover:border-white hover:bg-white/10 hover:no-underline"
                 >
                   Make an enquiry
                 </button>
                 <button
                   type="button"
                   aria-label="Open menu"
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-white/45 text-white/90 transition hover:border-white hover:bg-white/10 hover:no-underline"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/45 text-white/90 transition hover:border-white hover:bg-white/10 hover:no-underline"
                 >
                   <span aria-hidden className="text-[10px] leading-none tracking-tight">|||</span>
                 </button>
@@ -153,10 +153,10 @@ export default function Contact() {
                   <div
                     className={
                       status.kind === "success"
-                        ? "mt-5 rounded-md border border-green-200/40 bg-green-900/25 px-3 py-2 text-sm text-green-100"
+                        ? "mt-5 rounded-md border border-green-200/40 bg-green-900/25 px-3 py-2 text-[0.95rem] leading-relaxed text-green-100 sm:text-sm"
                         : status.kind === "pending"
-                        ? "mt-5 rounded-md border border-yellow-100/40 bg-yellow-900/25 px-3 py-2 text-sm text-yellow-100"
-                        : "mt-5 rounded-md border border-red-200/40 bg-red-900/30 px-3 py-2 text-sm text-red-100"
+                        ? "mt-5 rounded-md border border-yellow-100/40 bg-yellow-900/25 px-3 py-2 text-[0.95rem] leading-relaxed text-yellow-100 sm:text-sm"
+                        : "mt-5 rounded-md border border-red-200/40 bg-red-900/30 px-3 py-2 text-[0.95rem] leading-relaxed text-red-100 sm:text-sm"
                     }
                     role={status.kind === "error" ? "alert" : "status"}
                   >
@@ -203,8 +203,8 @@ export default function Contact() {
 
                   <fieldset className="flex min-h-[44px] flex-col">
                     <legend className="mb-2 text-[11px] uppercase tracking-[0.16em] text-white/65">Service Type</legend>
-                    <div className="rounded-2xl border border-white/30 bg-[linear-gradient(145deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] p-3 shadow-[0_14px_36px_rgba(0,0,0,0.3)] backdrop-blur-xl">
-                      <div className="grid gap-2 sm:grid-cols-2">
+                    <div className="rounded-2xl border border-white/30 bg-[linear-gradient(145deg,rgba(255,255,255,0.16),rgba(255,255,255,0.06))] p-3 shadow-[0_14px_36px_rgba(0,0,0,0.3)] backdrop-blur-md md:backdrop-blur-xl">
+                      <div className="grid gap-2 md:grid-cols-2">
                         {serviceOptions.map((service) => {
                           const isSelected = selectedServices.includes(service);
 
@@ -216,8 +216,8 @@ export default function Contact() {
                                 onChange={() => toggleService(service)}
                                 className="peer sr-only"
                               />
-                              <span
-                                className={`flex min-h-[42px] items-center rounded-xl border px-3 py-2 text-sm transition ${
+                                  <span
+                                className={`flex min-h-[44px] items-center rounded-xl border px-3 py-2 text-sm transition ${
                                   isSelected
                                     ? "border-white/55 bg-white/20 text-white"
                                     : "border-white/20 bg-white/5 text-white/85 hover:bg-white/10"
@@ -238,16 +238,16 @@ export default function Contact() {
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       required
-                      rows={4}
+                      rows={3}
                       placeholder="Tell us about your project"
-                      className={`${fieldBaseClass} resize-none`}
+                      className={`${fieldBaseClass} min-h-[108px] resize-none sm:min-h-[132px]`}
                     />
                   </label>
 
                   <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
                     <button
                       type="submit"
-                      className="rounded-full border border-white/55 px-5 py-2 text-sm font-medium text-white transition hover:border-white hover:bg-white/10 hover:no-underline"
+                      className="min-h-11 rounded-full border border-white/55 px-5 py-2 text-sm font-medium text-white transition hover:border-white hover:bg-white/10 hover:no-underline"
                     >
                       Send Inquiry
                     </button>

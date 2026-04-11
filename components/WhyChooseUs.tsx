@@ -33,23 +33,23 @@ const values = [
 
 export default function WhyChooseUs() {
   return (
-    <section id="why-choose-us" className="py-20 bg-gradient-to-b from-gray-900 to-black">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-14">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">ACTMC Core Values</h2>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+    <section id="why-choose-us" className="bg-gradient-to-b from-gray-900 to-black py-16 md:py-20">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="mb-12 text-center md:mb-14">
+          <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl md:text-5xl">ACTMC Core Values</h2>
+          <p className="mx-auto max-w-2xl text-base text-gray-300 md:text-lg">
             ACMTC is committed to delivering accurate, competent, and methodical services built on trust and credibility
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 max-w-6xl mx-auto">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-5 xl:gap-6">
           {values.map((value) => (
             <div
               key={value.title}
-              className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700 flex flex-col items-center text-center"
+              className="flex min-h-[240px] flex-col items-center rounded-lg border border-gray-700 bg-gray-800/50 p-5 text-center backdrop-blur-sm md:p-6"
             >
-              <div className="text-[#C41E3A] mb-4">{value.icon}</div>
-              <h3 className="text-lg font-bold text-white mb-2">{value.title}</h3>
+              <div className="mb-4 text-[#C41E3A]">{value.icon}</div>
+              <h3 className="mb-2 text-lg font-bold text-white">{value.title}</h3>
               <p className="text-gray-300 text-sm leading-relaxed">{value.description}</p>
             </div>
           ))}
