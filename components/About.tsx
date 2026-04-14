@@ -29,7 +29,7 @@ export default function About() {
               <div aria-hidden className="absolute -left-6 -top-6 h-[320px] w-[320px] rounded-full blur-3xl md:h-[420px] md:w-[420px]" style={{ background: 'radial-gradient(ellipse at center, rgba(196,30,58,0.08) 0%, transparent 70%)', zIndex: 0 }} />
               <div className="relative z-20 aspect-[9/7] w-full overflow-hidden rounded-3xl border border-[#2b2b2b] shadow-2xl md:absolute md:left-0 md:top-6 md:w-3/4 md:-rotate-2 animate-scale-in transform-gpu">
                 <Image
-                  src="/pic sec 5.png"
+                  src="/img15.jpg"
                   alt="interior sample"
                   fill
                   className="object-cover"
@@ -40,7 +40,7 @@ export default function About() {
               </div>
               <div className="relative z-10 mt-4 aspect-[9/7] w-full overflow-hidden rounded-3xl border border-[#2b2b2b] shadow-2xl md:absolute md:right-0 md:top-0 md:mt-0 md:w-3/4 md:translate-x-6 md:translate-y-10 md:rotate-2 animate-scale-in transform-gpu">
                 <Image
-                  src="/pic sec 6.png"
+                  src="/img9.jpg"
                   alt="interior sample 2"
                   fill
                   className="object-cover"

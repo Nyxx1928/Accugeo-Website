@@ -42,9 +42,9 @@ const services: Service[] = [
       "QUALITY TEST OF CURING COMPOUND",
     ],
     images: [
-      { src: "/service1.png", alt: "Engineers preparing concrete sample cylinders in a materials lab" },
-      { src: "/service2.png", alt: "Close-up of aggregate material analysis for quality grading" },
-      { src: "/service3.png", alt: "Lab technician recording asphalt stability test results" },
+      { src: "/img 4.jpg", alt: "Engineers preparing concrete sample cylinders in a materials lab" },
+      { src: "/img2.jpg", alt: "Close-up of aggregate material analysis for quality grading" },
+      { src: "/img7.jpg", alt: "Lab technician recording asphalt stability test results" },
     ],
   },
   {
@@ -55,9 +55,9 @@ const services: Service[] = [
       "Dynamic Cone Penetrometer Test",
     ],
     images: [
-      { src: "/service2.png", alt: "Inspector examining delivered material on-site before installation" },
-      { src: "/service3.png", alt: "Quality team reviewing construction phase checks at project site" },
-      { src: "/service1.png", alt: "Inspection report and checklist documentation for compliance tracking" },
+      { src: "/dyna cone pen test.jpg", alt: "Inspector examining delivered material on-site before installation" },
+      { src: "/field den test.jpg", alt: "Quality team reviewing construction phase checks at project site" },
+      { src: "/field den test 2.jpg", alt: "Inspection report and checklist documentation for compliance tracking" },
     ],
   },
   {
@@ -70,9 +70,9 @@ const services: Service[] = [
       "Standard Penetration Test",
     ],
     images: [
-      { src: "/service3.png", alt: "Consultant presenting technical findings to stakeholders" },
-      { src: "/service1.png", alt: "Detailed engineering report with compliance and recommendations" },
-      { src: "/service2.png", alt: "Project planning session focused on material standards" },
+      { src: "/img 11.jpg", alt: "Consultant presenting technical findings to stakeholders" },
+      { src: "/img 16.jpg", alt: "Detailed engineering report with compliance and recommendations" },
+      { src: "/img15.jpg", alt: "Project planning session focused on material standards" },
     ],
   },
   {
@@ -86,9 +86,9 @@ const services: Service[] = [
       "Rebar Scanning",
     ],
     images: [
-      { src: "/service1.png", alt: "Technician performing rebound hammer test on concrete surface" },
-      { src: "/service3.png", alt: "Dye penetrant test revealing surface cracks in metal component" },
-      { src: "/service2.png", alt: "Rebar scanning equipment detecting reinforcement layout" },
+      { src: "/non desc test 1.jpg", alt: "Technician performing rebound hammer test on concrete surface" },
+      { src: "/non desc test 2.jpg", alt: "Dye penetrant test revealing surface cracks in metal component" },
+      { src: "/non desc test 3.jpg", alt: "Rebar scanning equipment detecting reinforcement layout" },
     ],
   },
 ];
