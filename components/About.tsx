@@ -65,7 +65,7 @@ export default function About() {
               <div className="text-xs tracking-widest text-[#C41E3A]">ABOUT US</div>
             </div>
 
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 animate-fade-in-up opacity-0" style={{ animationDelay: '100ms' }}>Building Trust Through Precision & <span className="italic">Quality</span></h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 animate-fade-in-up opacity-0" style={{ animationDelay: '100ms' }}>Building Trust Through Precision & Quality</h2>
 
             <div className="h-px w-16 bg-gradient-to-r from-[#C41E3A] to-transparent my-4 animate-fade-in-up opacity-0" style={{ animationDelay: '150ms' }} />
 
