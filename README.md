@@ -1,28 +1,21 @@
-# Accugeo Website
+# Accugeo — Construction Materials & Testing Center
 
 [![CI](https://github.com/Insentient57/Accugeo-Website/actions/workflows/ci.yml/badge.svg)](https://github.com/Insentient57/Accugeo-Website/actions/workflows/ci.yml)
 
-A modern website for Accugeo Construction Materials and Testing Center built with Next.js and Tailwind CSS.
+Accugeo is a modern, responsive website for Accugeo Construction Materials and Testing Center. It showcases laboratory and field testing services (material testing, geotechnical investigation, quality inspection, non‑destructive testing) and provides an interactive contact flow for inquiries and consultations.
 
-## Features
+Quick GitHub About blurb (copy this into the repo description):
 
-- Responsive navigation bar with smooth scrolling
-- Hero section with background image and gradient overlay
-- About section with fade-up animations
-- Services carousel with navigation arrows
-- Contact section with location map
-- Custom Sansation font
-- Text shadow effects throughout
-- Smooth animations and transitions
+> Accugeo — Next.js site for Accugeo Construction Materials & Testing Center. Lab & field testing, geotechnical investigation, NDT, inspection, and consulting.
 
-## Tech Stack
+## Highlights
 
-- Next.js 14
-- TypeScript
-- Tailwind CSS
-- React
+- Built with Next.js 14, TypeScript and Tailwind CSS
+- Interactive sections: smooth navigation, services accordion, contact form with service selection
+- Responsive design with accessible navigation and reduced-motion support
+- Docker-ready (development and production compose profiles)
 
-## Getting Started
+## Try it locally
 
 1. Install dependencies:
 
@@ -30,140 +23,68 @@ A modern website for Accugeo Construction Materials and Testing Center built wit
 npm install
 ```
 
-2. Run the development server:
+2. Run the dev server:
 
 ```bash
 npm run dev
 ```
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+3. Open http://localhost:3000 and try the interactive features:
 
-## Docker
+- Click **Get in Touch** to open the contact form and send an inquiry
+- Click **View Services** to scroll to the services section and open sub-service details
 
-This repository includes a multi-stage Dockerfile and Docker Compose setup for both development and production.
+## Useful scripts
 
-### Prerequisites
+- `npm run dev` — start dev server
+- `npm run build` — build for production
+- `npm start` — run production build
+- `npm run test` — run unit tests (Jest)
+- `npm run test:e2e` — run Playwright e2e tests
 
-- Docker Desktop (or Docker Engine + Compose plugin)
+## Docker (quick)
 
-### Environment files
-
-Production container:
-
-```bash
-cp .env.docker.example .env.docker
-```
-
-Development container:
-
-```bash
-cp .env.example .env.local
-```
-
-### Run production container
-
-```bash
-docker compose up --build web
-```
-
-If port 3000 is already in use, set `HOST_PORT`:
-
-```bash
-HOST_PORT=3001 docker compose up --build web
-```
-
-PowerShell:
-
-```powershell
-$env:HOST_PORT=3001; docker compose up --build web
-```
-
-Or with npm scripts:
-
-```bash
-npm run docker:prod
-```
-
-App URL: [http://localhost:3000](http://localhost:3000)
-Health URL: [http://localhost:3000/api/health](http://localhost:3000/api/health)
-
-### Run development container (hot reload)
-
-```bash
-docker compose --profile dev up --build web-dev
-```
-
-If port 3000 is already in use, set `HOST_PORT`:
-
-```bash
-HOST_PORT=3001 docker compose --profile dev up --build web-dev
-```
-
-PowerShell:
-
-```powershell
-$env:HOST_PORT=3001; docker compose --profile dev up --build web-dev
-```
-
-Or with npm scripts:
+Development (hot reload):
 
 ```bash
 npm run docker:dev
 ```
 
-### Useful Docker commands
+Production:
 
 ```bash
-npm run docker:build
-npm run docker:up
-npm run docker:logs
-npm run docker:down
-npm run docker:dev:down
+npm run docker:prod
 ```
 
-Check container health status:
+If port 3000 conflicts, set `HOST_PORT` (PowerShell example):
 
-```bash
-docker compose ps
+```powershell
+$env:HOST_PORT=3001; npm run docker:prod
 ```
 
-## Project Structure
+## Project structure (important files)
 
 ```
-├── app/
-│   ├── globals.css
-│   ├── layout.tsx
-│   └── page.tsx
-├── components/
-│   ├── About.tsx
-│   ├── Contact.tsx
-│   ├── Footer.tsx
-│   ├── Hero.tsx
-│   ├── Navbar.tsx
-│   └── Services.tsx
-├── public/
-│   ├── hero-bg.png
-│   ├── logo.png
-│   ├── NavBar-BG.png
-│   ├── Location Image.png
-│   ├── arrowleft.png
-│   └── arrowright.png
-└── package.json
+app/           # Next.js app routes + global styles
+components/    # Reusable UI sections (Hero, About, Services, Contact, Navbar)
+public/        # Images and static assets
+lib/           # Utilities (e.g. cn helper)
+package.json   # Scripts and dependencies
 ```
 
-## Customization
+## Development notes
 
-- Update images in the `/public` folder
-- Modify text content in each component
-- Adjust colors in `tailwind.config.ts`
-- Change font in `app/layout.tsx`
+- Content and copy live inside the components in `/components` — edit those to update page text.
+- Images are in `/public` — swap them to change visuals.
+- The contact form posts to `/api/contact` — update the route if you change the shape of the form payload.
 
-## Deployment
+## Contribution
 
-Deploy easily to Vercel:
+PRs are welcome. For fixes or small changes, open a branch, push and create a PR. If you plan larger work, open an issue first to discuss.
 
-```bash
-npm run build
-```
+---
 
-Then push to GitHub and connect to Vercel for automatic deployments.
+If you'd like, I can also:
+
+- add a short `CONTRIBUTING.md` and `DEVELOPMENT.md` with common workflows
+- create a small demo GIF or screenshot and add it to the README
