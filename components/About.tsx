@@ -99,9 +99,9 @@ export default function About() {
             play={sectionVisible}
             delayOffset={400}
             stats={[
-              { id: 'a1', icon: <Calendar className="w-5 h-5" />, value: '25+', label: 'Years Of Experience' },
-              { id: 'a2', icon: <Briefcase className="w-5 h-5" />, value: '1250+', label: 'Projects Completed' },
-              { id: 'a3', icon: <Award className="w-5 h-5" />, value: '45+', label: 'Awards Winning' },
+              { id: 'a1', icon: <Calendar className="w-5 h-5" />, value: '5+', label: 'Years Of Experience' },
+              { id: 'a2', icon: <Briefcase className="w-5 h-5" />, value: '100+', label: 'Projects Completed' },
+              { id: 'a3', icon: <Award className="w-5 h-5" />, value: '27+', label: 'Awards Winning' },
               { id: 'a4', icon: <Users className="w-5 h-5" />, value: '35+', label: 'Professionals' },
             ]}
             className="mt-6"
