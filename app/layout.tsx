@@ -3,8 +3,8 @@ import './globals.css'
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: 'Accugeo - Corrosion Materials and Testing Center',
-  description: 'Professional corrosion testing and materials services',
+  title: 'Accugeo - Construction Materials and Testing Center',
+  description: 'Professional construction materials testing services',
 }
 
 export default function RootLayout({
